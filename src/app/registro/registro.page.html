@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar color = "primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>REGISTER</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup] = "formularioRegistro">
+        <ion-item lines="full">
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input formControlName = "nombre" type="text" required></ion-input>
+        </ion-item>
+      
+        <ion-item lines="full">
+          <ion-label position="floating">Apellidos</ion-label>
+          <ion-input formControlName = "apellidos" type="text" required></ion-input>
+        </ion-item>
+    
+        <ion-item lines="full">
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName = "email" type="text" required></ion-input>
+        </ion-item>
+    
+        <ion-item lines="full">
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input formControlName = "password" type="password" required></ion-input>
+        </ion-item>
+
+        <ion-item lines="full">
+          <ion-label position="floating">Confirmar contraseña</ion-label>
+          <ion-input formControlName = "confirmpassword" type="password" required></ion-input>
+        </ion-item>
+    
+        <ion-col>
+          <ion-button (click)="register()" color="danger" expand="block">SING UP</ion-button>
+        </ion-col>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
