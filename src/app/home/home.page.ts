@@ -7,9 +7,6 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  public items=[{
-    src: 'assets/icons/logo.png'
-  }]
 
   constructor() {}
 
