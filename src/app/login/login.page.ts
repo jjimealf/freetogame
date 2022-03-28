@@ -50,26 +50,30 @@ export class LoginPage implements OnInit {
     .then(async data => {
       this.data = data;
       this.data = this.data.data;
-      if(this.data.type=='a'){
-        this.route.navigate(['/admin'])
-      }else if(this.data.email_confirmed=='0'){
-        const alert = await this.alertControler.create({
-          header: 'Email no confirmado',
-          message: 'Revise su correo para confirmar el registro',
-          buttons: ['Aceptar'],
-        });
-        await alert.present();
-        return;
-      }else if(this.data.actived=='0'){
-        const alert = await this.alertControler.create({
-          header: 'Usuario no activado',
-          message: 'Espere a que el administrador active su cuenta',
-          buttons: ['Aceptar'],
-        });
-        await alert.present();
-        return;
-      }else{
-        this.route.navigate(['/user'])
+      if(this.data.email_confirmed==1){
+        if(this.data.actived==1){
+          if(this.data.type=='a'){
+            this.route.navigate(['/admin'])
+          }else{
+            this.route.navigate(['/user'])
+          }
+        }else{
+            const alert2 = await this.alertControler.create({
+              header: 'Usuario no activado',
+              message: 'Espere a que el administrador active su cuenta',
+              buttons: ['Aceptar'],
+            });
+            await alert2.present();
+            return;
+          }
+        }else{
+          const alert3 = await this.alertControler.create({
+            header: 'Email no confirmado',
+            message: 'Revise su correo para confirmar el registro',
+            buttons: ['Aceptar'],
+          });
+          await alert3.present();
+          return;
       }
 
     })
