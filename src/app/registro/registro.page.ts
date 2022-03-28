@@ -22,7 +22,6 @@ export class RegistroPage implements OnInit {
     this.formularioRegistro = this.fb.group({
       'nombre': new FormControl("", Validators.required),
       'apellidos': new FormControl("", Validators.required),
-      'company_id': new FormControl("",Validators.required),
       'email': new FormControl("", Validators.required),
       'password': new FormControl("", Validators.required),
       'confirmpassword': new FormControl("", Validators.required)
@@ -51,7 +50,6 @@ export class RegistroPage implements OnInit {
     var usuario = {
       nombre: f.nombre,
       apellidos: f.apellidos,
-      company_id: f.company_id,
       email: f.email,
       password: f.password,
       confirmpassword: f.confirmpassword
@@ -61,6 +59,6 @@ export class RegistroPage implements OnInit {
 
     console.log(usuario);
     this.restService.registrarUsuario
-    (usuario.nombre, usuario.apellidos, usuario.company_id, usuario.email, usuario.password, usuario.confirmpassword);
+    (usuario.nombre, usuario.apellidos, usuario.email, usuario.password, usuario.confirmpassword);
     this.route.navigate(['/home'])
 }}

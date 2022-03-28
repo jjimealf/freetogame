@@ -63,7 +63,7 @@ export class RestService {
     })
   }
 
-  registrarUsuario(myName: string, mySecondname: string, myCompany_id : number, myEmail: string, myPassword: string, myPasswordConf : string){
+  registrarUsuario(myName: string, mySecondname: string, myEmail: string, myPassword: string, myPasswordConf : string){
     return new Promise(resolve => {
       this.http.post(this.apiUrl + '/register', 
       {
@@ -71,8 +71,7 @@ export class RestService {
         secondname: mySecondname,
         email: myEmail,
         password: myPassword,
-        c_password: myPasswordConf,
-        company_id: myCompany_id})
+        c_password: myPasswordConf})
         .subscribe(data => {
           console.log(data);
           resolve(data);
