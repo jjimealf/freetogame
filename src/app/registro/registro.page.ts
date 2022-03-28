@@ -15,9 +15,8 @@ import {  FormGroup,
 export class RegistroPage implements OnInit {
 
   formularioRegistro: FormGroup;
-  restService : RestService;
 
-  constructor(private route: Router, public fb: FormBuilder, public alertControler: AlertController, restService : RestService) {
+  constructor(private route: Router, public fb: FormBuilder, public alertControler: AlertController, public restService : RestService) {
 
     this.formularioRegistro = this.fb.group({
       'nombre': new FormControl("", Validators.required),
@@ -26,8 +25,6 @@ export class RegistroPage implements OnInit {
       'password': new FormControl("", Validators.required),
       'confirmpassword': new FormControl("", Validators.required)
     })
-
-    this.restService = restService;
 
   }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { AlertController } from '@ionic/angular';
 
 
 @Injectable({
@@ -10,27 +11,12 @@ export class RestService {
   token: any;
   usuario: any;
   
-  
   apiUrl = 'http://semillero.allsites.es/public/api';
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private alertControler: AlertController) { }
 
-  login(){
-    return new Promise(resolve => {
-      this.http.post<any>(this.apiUrl + '/login', 
-      {
-        email: 'raul@raul.com', 
-        password: '123456'})     
-        .subscribe(data => {
-          this.token = data.data.token; 
-          console.log(data); 
-          resolve(data);
-      });
 
-    });
-  }
-
-  loginReal(myemail: string, mypassword: string){
+  login(myemail: string, mypassword: string){
     return new Promise(resolve => {
       this.http.post<any>(this.apiUrl + '/login', 
       {
@@ -38,12 +24,17 @@ export class RestService {
         password: mypassword})     
         .subscribe(data => {
           this.token = data.data.token;
-         
           resolve(data);   
           console.log(data);   
-          err=> {
+        },async err=> {
             console.log(err)
-          }      
+            const alert = await this.alertControler.create({
+              header: 'Fallo al iniciar sesion',
+              message: 'Credenciales incorrectas',
+              buttons: ['Aceptar'],
+            });
+            await alert.present();
+            return;    
       });
 
     });
@@ -72,9 +63,16 @@ export class RestService {
         email: myEmail,
         password: myPassword,
         c_password: myPasswordConf})
-        .subscribe(data => {
+        .subscribe(async data => {
           console.log(data);
           resolve(data);
+          const alert = await this.alertControler.create({
+            header: 'Usuario registrado',
+            message: 'Confirma tu correo y espera a que el administrador te active el ususario',
+            buttons: ['Aceptar'],
+          });
+          await alert.present();
+          return;    
         });
     });
   }
@@ -140,4 +138,18 @@ export class RestService {
 
   }
 
+  obtenerUsuario(id: number){
+    return new Promise<any>(resolve => {
+      this.http.get(this.apiUrl + '/user/'+id,
+      {
+        headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token)
+      })
+      .subscribe(data => {
+        resolve(data)
+        console.log(data);
+      err => {
+        console.log(err)
+      }})
+    })
+  }
 }

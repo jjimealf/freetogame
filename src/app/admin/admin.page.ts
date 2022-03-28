@@ -53,8 +53,6 @@ export class AdminPage implements OnInit {
 
   async eliminar(id: number) {
     const alert = await this.alertCtrl.create({
-      header: 'Alert',
-      subHeader: 'Delete User',
       message: '¿Estas seguro de eliminar al usuario?',
       buttons: [
         {
