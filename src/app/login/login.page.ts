@@ -52,7 +52,7 @@ export class LoginPage implements OnInit {
       this.data = this.data.data;
       //this.restService.obtenerUsuario(this.data.id);
       if(this.data.type=='a'){
-        this.route.navigate(['/administration'])
+        this.route.navigate(['/admin'])
       }else{
         this.route.navigate(['/user'])
       }
