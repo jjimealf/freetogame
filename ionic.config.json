@@ -1,5 +1,7 @@
 {
   "name": "freetogame",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
