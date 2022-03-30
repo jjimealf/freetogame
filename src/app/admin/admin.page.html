@@ -9,11 +9,11 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content color="dark">
 
   <ion-list #lista>
     <ion-item-sliding *ngFor="let usuario of usuarios">
-      <ion-item *ngIf="usuario.deleted==0 && usuario.type=='u'">
+      <ion-item color="dark" *ngIf="usuario.deleted==0 && usuario.type=='u'">
         <ion-label>
           <h3>{{ usuario.firstname }} {{ usuario.secondname }}</h3>
           <p>{{ usuario.email }}</p>
@@ -39,7 +39,7 @@
 <ion-footer>
   <ion-tab-bar>
    <ion-tabs>
-    <ion-tab-bar slot="bottom">
+    <ion-tab-bar slot="bottom" color="primary">
 
       <ion-tab-button [routerLink]="['/admin']">
         <ion-icon name="person-outline"></ion-icon>
