@@ -7,37 +7,37 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card>
+<ion-content color="dark">
+  <ion-card color="dark">
     <ion-card-content>
       <form [formGroup] = "formularioRegistro">
-        <ion-item lines="full">
+        <ion-item lines="full" color="dark">
           <ion-label position="floating">Nombre</ion-label>
           <ion-input formControlName = "nombre" type="text" required></ion-input>
         </ion-item>
       
-        <ion-item lines="full">
+        <ion-item lines="full" color="dark">
           <ion-label position="floating">Apellidos</ion-label>
           <ion-input formControlName = "apellidos" type="text" required></ion-input>
         </ion-item>
     
-        <ion-item lines="full">
+        <ion-item lines="full" color="dark">
           <ion-label position="floating">Email</ion-label>
           <ion-input formControlName = "email" type="text" required></ion-input>
         </ion-item>
     
-        <ion-item lines="full">
+        <ion-item lines="full" color="dark">
           <ion-label position="floating">Contraseña</ion-label>
           <ion-input formControlName = "password" type="password" required></ion-input>
         </ion-item>
 
-        <ion-item lines="full">
+        <ion-item lines="full" color="dark">
           <ion-label position="floating">Confirmar contraseña</ion-label>
           <ion-input formControlName = "confirmpassword" type="password" required></ion-input>
         </ion-item>
     
         <ion-col>
-          <ion-button (click)="register()" color="danger" expand="block">REGISTRAR</ion-button>
+          <ion-button (click)="register()" color="primary" expand="block">REGISTRAR</ion-button>
         </ion-col>
       </form>
     </ion-card-content>
