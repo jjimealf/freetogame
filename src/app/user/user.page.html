@@ -9,5 +9,36 @@
 </ion-header>
 
 <ion-content>
-<h1>USUARIO LOGUEADO CORRECTAMENTE</h1>
+<ion-list *ngFor="let item of juegos">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{item.title}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{item.short_description}}
+    </ion-card-content>
+  </ion-card>
+</ion-list>
 </ion-content>
+<ion-footer>
+  <ion-tab-bar>
+   <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button [routerLink]="['/user']">
+        <ion-icon name="game-controller-outline"></ion-icon>
+        <ion-label>Juegos</ion-label>
+      </ion-tab-button>
+      
+      <ion-tab-button>
+        <ion-icon name="rocket-outline"></ion-icon>
+        <ion-label>Plataformas</ion-label>
+      </ion-tab-button>
+  
+      <ion-tab-button>
+        <ion-icon name="close-circle"></ion-icon>
+        <ion-label>No Works</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-tab-bar>
+</ion-footer>

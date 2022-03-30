@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
+import { juego, juegos } from '../interfaces/interface';
+
 
 
 @Injectable({
@@ -11,7 +13,9 @@ export class RestService {
   token: any;
   usuario: any;
   
+
   apiUrl = 'http://semillero.allsites.es/public/api';
+  apiUrl2 = 'https://www.freetogame.com/api'
   
   constructor(private http: HttpClient, private alertControler: AlertController) { }
 
@@ -150,6 +154,25 @@ export class RestService {
       err => {
         console.log(err)
       }})
+    })
+  }
+
+  listarJuegos(){
+    return new Promise(resolve => {
+      this.http.get<juegos>(this.apiUrl2 + '/games',
+      {
+        headers: new HttpHeaders().set(
+           "free-to-play-games-database.p.rapidapi.com",
+		        "9038f2620amsh062912a94ec6960p1b7f52jsn07e1954daa31"
+        )
+      })
+      .subscribe(data => {
+        resolve(data)
+        console.log(data)
+        err => {
+          console.log(err)
+        }
+      })
     })
   }
 }

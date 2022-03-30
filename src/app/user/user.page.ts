@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { juego, juegos } from '../interfaces/interface';
+import { RestService } from '../service/rest.service';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPage implements OnInit {
 
-  constructor() { }
+  juegos: juego[]=[]
+
+  constructor(public restService: RestService) { }
 
   ngOnInit() {
+    this.listadoJuegos()
   }
 
+  listadoJuegos(){
+    this.restService.listarJuegos().then(data => {
+      this.juegos = data['data']
+    })
+  }
 }
