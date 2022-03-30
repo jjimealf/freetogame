@@ -15,7 +15,7 @@ export class RestService {
   
 
   apiUrl = 'http://semillero.allsites.es/public/api';
-  apiUrl2 = 'https://www.freetogame.com/api'
+  apiUrl2 = 'https://free-to-play-games-database.p.rapidapi.com/api'
   
   constructor(private http: HttpClient, private alertControler: AlertController) { }
 
@@ -162,8 +162,8 @@ export class RestService {
       this.http.get<juegos>(this.apiUrl2 + '/games',
       {
         headers: new HttpHeaders().set(
-           "free-to-play-games-database.p.rapidapi.com",
-		        "9038f2620amsh062912a94ec6960p1b7f52jsn07e1954daa31"
+          'free-to-play-games-database.p.rapidapi.com',
+          '9038f2620amsh062912a94ec6960p1b7f52jsn07e1954daa31'
         )
       })
       .subscribe(data => {
