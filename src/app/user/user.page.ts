@@ -20,7 +20,6 @@ export class UserPage implements OnInit {
   listadoJuegos(){
     this.restService.listarJuegos().then(data => {
       this.juegos=data
-      console.log(this.juegos);
     })
   }
 }
