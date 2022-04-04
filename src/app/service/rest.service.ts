@@ -158,8 +158,8 @@ export class RestService {
   }
 
   listarJuegos(){
-    return new Promise(resolve => {
-      this.http.get<juegos>(this.apiUrl2 + '/games',
+    return new Promise((resolve) => {
+      this.http.get<juego>(this.apiUrl2 + '/games',
       {
         headers: new HttpHeaders().set(
           'X-RapidAPI-Key',

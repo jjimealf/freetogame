@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { juego, juegos } from '../interfaces/interface';
+import { juego } from '../interfaces/interface';
 import { RestService } from '../service/rest.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { RestService } from '../service/rest.service';
 })
 export class UserPage implements OnInit {
 
-  juegos: juego[]=[]
+  juegos: any;
 
   constructor(public restService: RestService) { }
 
@@ -19,7 +19,8 @@ export class UserPage implements OnInit {
 
   listadoJuegos(){
     this.restService.listarJuegos().then(data => {
-      this.juegos = data['data']
+      this.juegos=data
+      console.log(this.juegos);
     })
   }
 }
