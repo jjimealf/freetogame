@@ -24,13 +24,22 @@
         <p>Desarrolladora: {{item.developer}}</p>
         <p>Plataforma: {{item.platform}}</p>
       </ion-card-content>
-  </ion-card>
+    </ion-card>
+  </ion-item>
 </ion-list>
+
+<ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Loading more data...">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
 </ion-content>
+
 <ion-footer>
   <ion-tab-bar>
    <ion-tabs>
-    <ion-tab-bar slot="bottom">
+    <ion-tab-bar slot="bottom" color="primary">
       <ion-tab-button [routerLink]="['/user']">
         <ion-icon name="game-controller-outline"></ion-icon>
         <ion-label>Juegos</ion-label>

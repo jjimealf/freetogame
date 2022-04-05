@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { juego } from '../interfaces/interface';
 import { RestService } from '../service/rest.service';
+import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
   selector: 'app-user',
@@ -9,7 +10,9 @@ import { RestService } from '../service/rest.service';
 })
 export class UserPage implements OnInit {
 
-  juegos: juego[];
+  juegos: juego[] = [];
+ 
+  @ViewChild(IonInfiniteScroll, {static: true}) infiniteScroll: IonInfiniteScroll;
 
   constructor(public restService: RestService) { }
 
@@ -21,5 +24,17 @@ export class UserPage implements OnInit {
     this.restService.listarJuegos().then( (data: juego[]) => {
       this.juegos=data;
     })
+  }
+
+  loadData(event){
+    setTimeout(() => {
+      const nuevoJuego= Array<juego>();
+      this.juegos.push(...nuevoJuego)
+     
+      if (this.juegos.length === 369) {
+        event.target.complete();
+        this.infiniteScroll.disabled = true;
+      }
+    }, 500);
   }
 }
