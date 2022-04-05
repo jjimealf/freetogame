@@ -7,23 +7,23 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card>
-    <ion-card-content>
-      <form [formGroup] = "formularioLogin">
-        <ion-item lines="full">
-          <ion-label position="floating" color = "Primary">Email</ion-label>
+<ion-content color="dark">
+  <ion-card color="dark">  
+    <ion-card-content > 
+      <form [formGroup] = "formularioLogin" >
+        <ion-item lines="full" color="dark">
+          <ion-label position="floating">Email</ion-label>
           <ion-input formControlName = "email" type="text" required></ion-input>
         </ion-item>
     
-        <ion-item lines="full">
-          <ion-label position="floating" color = "Primary">Password</ion-label>
+        <ion-item lines="full" color="dark">
+          <ion-label position="floating">Password</ion-label>
           <ion-input formControlName = "password" type="password" required></ion-input>
         </ion-item>
       <br>
         <ion-row>
           <ion-col>
-            <ion-button (click)="login()" type="submit" color="danger" expand="block">LOGUEAR</ion-button>
+            <ion-button (click)="login()" type="submit" color="primary" expand="block">LOGUEAR</ion-button>
           </ion-col>
         </ion-row>
       </form>
