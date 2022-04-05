@@ -11,12 +11,19 @@
 <ion-content>
 <ion-list *ngFor="let item of juegos">
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{item.title}}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      {{item.short_description}}
-    </ion-card-content>
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <img src="{{item.thumbnail}}">
+      </ion-thumbnail>
+      <ion-card-header>
+        <ion-card-title>{{item.title}}</ion-card-title>
+      </ion-card-header>
+    </ion-item>
+      <ion-card-content>
+        <p>{{item.short_description}}</p>
+        <p>Desarrolladora: {{item.developer}}</p>
+        <p>Plataforma: {{item.platform}}</p>
+      </ion-card-content>
   </ion-card>
 </ion-list>
 </ion-content>

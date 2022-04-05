@@ -9,7 +9,7 @@ import { RestService } from '../service/rest.service';
 })
 export class UserPage implements OnInit {
 
-  juegos: any;
+  juegos: juego[];
 
   constructor(public restService: RestService) { }
 
@@ -18,8 +18,8 @@ export class UserPage implements OnInit {
   }
 
   listadoJuegos(){
-    this.restService.listarJuegos().then(data => {
-      this.juegos=data
+    this.restService.listarJuegos().then( (data: juego[]) => {
+      this.juegos=data;
     })
   }
 }
