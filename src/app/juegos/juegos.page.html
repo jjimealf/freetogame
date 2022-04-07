@@ -23,7 +23,26 @@
         <p *ngIf="isFull[i] === true">{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
         <p *ngIf="isFull[i] === false">{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
         <p>Desarrolladora: {{item.developer}}</p>
-        <p>Plataforma: {{item.platform}}</p>
+        <ion-label>Plataformas:
+          <ion-grid>
+            <ion-row>
+                <ion-col size="2" >
+                  <ion-icon *ngIf="item.platform === 'PC (Windows)' " name="logo-windows"></ion-icon>
+                </ion-col>
+                <ion-col size="2" >
+                  <ion-icon *ngIf="item.platform === 'Web Browser' " name="browsers-outline"></ion-icon>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="item.platform === 'PC (Windows), Web Browser'"> 
+              <ion-col size="2" >
+                <ion-icon name="logo-windows"></ion-icon>
+              </ion-col>
+              <ion-col size="2" >
+                <ion-icon name="browsers-outline"></ion-icon>
+              </ion-col>
+          </ion-row>
+        </ion-grid>
+        </ion-label>
       </ion-card-content>
     </ion-card>
   </ion-item>
