@@ -10,7 +10,7 @@
 
 <ion-content >
 <ion-list>
-  <ion-item *ngFor="let item of juegos"> 
+  <ion-item *ngFor="let item of juegos, let i = index"> 
     <ion-card color="tertiary" > 
       <ion-item color="tertiary">
         <ion-thumbnail slot="start">
@@ -21,7 +21,8 @@
         </ion-card-header>
       </ion-item>
       <ion-card-content>
-        <p>{{item.short_description}}</p>
+        <p *ngIf="isFull[i] === true">{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
+        <p *ngIf="isFull[i] === false">{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
         <p>Desarrolladora: {{item.developer}}</p>
         <p>Plataforma: {{item.platform}}</p>
       </ion-card-content>
@@ -32,7 +33,7 @@
 <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
   <ion-infinite-scroll-content
     loadingSpinner="bubbles"
-    loadingText="Loading more data...">
+    loadingText="Cargando mas juegos...">
   </ion-infinite-scroll-content>
 </ion-infinite-scroll>
 </ion-content>
