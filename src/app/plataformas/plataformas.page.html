@@ -4,12 +4,19 @@
       <ion-menu-button menu="administration">
       </ion-menu-button>
     </ion-buttons>
-    <ion-title>Juegos</ion-title>
+    <ion-title>Plataformas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+<ion-segment (ionChange)="segmentChanged($event)" value="PC (Windows)">
+  <ion-segment-button value="PC (Windows)">
+    PC (Windows)
+  </ion-segment-button>
+  <ion-segment-button value="Web Browser">
+    Web Browser
+  </ion-segment-button>
+</ion-segment>
 </ion-content>
 
 <ion-footer>
