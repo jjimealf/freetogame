@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UserPageRoutingModule } from './user-routing.module';
+import { UserPageRoutingModule } from './juegos-routing.module';
 
-import { UserPage } from './user.page';
+import { UserPage } from './juegos.page';
 import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({

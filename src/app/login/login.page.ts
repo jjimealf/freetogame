@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
             if(this.ususario.type=='a'){
               this.route.navigate(['/admin'])
             }else{
-              this.route.navigate(['/user'])
+              this.route.navigate(['/juegos'])
             }
           }else{
               const alert2 = await this.alertControler.create({
