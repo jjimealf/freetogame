@@ -11,18 +11,22 @@ import { IonInfiniteScroll } from '@ionic/angular';
 export class UserPage implements OnInit {
 
   juegos: juego[] = [];
- 
+  isFull: boolean[] = [];
+
   @ViewChild(IonInfiniteScroll, {static: true}) infiniteScroll: IonInfiniteScroll;
+  
 
   constructor(public restService: RestService) { }
 
   ngOnInit() {
     this.listadoJuegos()
+   
   }
 
   listadoJuegos(){
     this.restService.listarJuegos().then( (data: juego[]) => {
       this.juegos=data;
+      this.getData();
     })
   }
 
@@ -35,6 +39,16 @@ export class UserPage implements OnInit {
         event.target.complete();
         this.infiniteScroll.disabled = true;
       }
-    }, 500);
+    }, 1000);
   }
+
+  getData(){
+    for(let i=0; i<this.juegos.length; i++){
+      this.isFull.push(false);
+    }
+}
+
+toggleMore(i){
+  this.isFull[i] = !this.isFull[i];
+}
 }
