@@ -4,7 +4,7 @@ import { RestService } from '../service/rest.service';
 import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-juegos',
   templateUrl: './juegos.page.html',
   styleUrls: ['./juegos.page.scss'],
 })
