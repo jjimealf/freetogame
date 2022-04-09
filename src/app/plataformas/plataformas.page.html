@@ -6,17 +6,18 @@
     </ion-buttons>
     <ion-title>Plataformas</ion-title>
   </ion-toolbar>
+  <ion-segment (ionChange)="segmentChanged($event)" value="pc" >
+    <ion-segment-button value="pc">
+      <ion-label color="light">PC (Windows)</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="browser">
+      <ion-label color="light">Web Browser</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 
 <ion-content>
-<ion-segment (ionChange)="segmentChanged($event)" value="pc" >
-  <ion-segment-button value="pc">
-    <ion-label color="light">PC (Windows)</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="browser">
-    <ion-label color="light">Web Browser</ion-label>
-  </ion-segment-button>
-</ion-segment>
+
 <ion-list>
   <ion-item color="dark" *ngFor="let item of juegos">
     <ion-label>{{item.title}}</ion-label>
