@@ -9,14 +9,19 @@
 </ion-header>
 
 <ion-content>
-<ion-segment (ionChange)="segmentChanged($event)" value="PC (Windows)">
-  <ion-segment-button value="PC (Windows)">
-    PC (Windows)
+<ion-segment (ionChange)="segmentChanged($event)" value="pc" >
+  <ion-segment-button value="pc">
+    <ion-label color="light">PC (Windows)</ion-label>
   </ion-segment-button>
-  <ion-segment-button value="Web Browser">
-    Web Browser
+  <ion-segment-button value="browser">
+    <ion-label color="light">Web Browser</ion-label>
   </ion-segment-button>
 </ion-segment>
+<ion-list>
+  <ion-item color="dark" *ngFor="let item of juegos">
+    <ion-label>{{item.title}}</ion-label>
+  </ion-item>
+</ion-list>
 </ion-content>
 
 <ion-footer>
