@@ -20,6 +20,9 @@
 
 <ion-list>
   <ion-item color="dark" *ngFor="let item of juegos">
+    <ion-thumbnail slot="start">
+      <img src="{{item.thumbnail}}">
+    </ion-thumbnail>
     <ion-label>{{item.title}}</ion-label>
   </ion-item>
 </ion-list>
