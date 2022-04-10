@@ -12,38 +12,52 @@ export class UserPage implements OnInit {
 
   juegos: juego[] = [];
   isFull: boolean[] = [];
+  pagesI: number = 0;
+  pagesF: number = 20;
 
   @ViewChild(IonInfiniteScroll, {static: true}) infiniteScroll: IonInfiniteScroll;
   
 
-  constructor(public restService: RestService) { }
+  constructor(public restService: RestService) {
+    this.listadoJuegos()
+   }
 
   ngOnInit() {
-    this.listadoJuegos()
-   
+    
   }
 
   listadoJuegos(){
     this.restService.listarJuegos().then( (data: juego[]) => {
-      this.juegos=data;
-      this.getData();
+      for(let i = this.pagesI; i < this.pagesF; i++){
+        this.juegos.push(data[i]);
+      }
+
+      this.pagesI += 20;
+      if(this.pagesF < 360){
+        this.pagesF += 20;
+      }else{
+        this.pagesF +=9
+      }
+      this.getData(data);
     })
   }
 
   loadData(event){
     setTimeout(() => {
-      const nuevoJuego= Array<juego>();
-      this.juegos.push(...nuevoJuego)
-     
-      if (this.juegos.length === 369) {
-        event.target.complete();
-        this.infiniteScroll.disabled = true;
+      this.listadoJuegos();
+      event.target.complete();
+      if (this.juegos.length == 369) {
+        event.target.disabled = true;
       }
-    }, 1000);
+    }, 500);
   }
 
-  getData(){
-    for(let i=0; i<this.juegos.length; i++){
+  toggleInfiniteScroll() {
+    this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
+  }
+
+  getData(data){
+    for(let i=0; i<data.length; i++){
       this.isFull.push(false);
     }
 }
