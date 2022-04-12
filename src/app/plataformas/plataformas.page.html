@@ -19,11 +19,23 @@
 <ion-content>
 
 <ion-list>
-  <ion-item color="dark" *ngFor="let item of juegos">
-    <ion-thumbnail slot="start">
-      <img src="{{item.thumbnail}}">
-    </ion-thumbnail>
-    <ion-label>{{item.title}}</ion-label>
+  <ion-item *ngFor="let item of juegos, let i = index">
+    <ion-card color="primary">
+      <ion-item color="primary">
+        <ion-thumbnail slot="start">
+          <img src="{{item.thumbnail}}">
+        </ion-thumbnail>
+        <ion-card-header>
+          <ion-card-title>{{item.title}}</ion-card-title>
+        </ion-card-header>
+      </ion-item>
+      <ion-card-content>
+        <p *ngIf="isFull[i] === true">{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
+        <p *ngIf="isFull[i] === false">{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
+        <p>Desarrolladora: {{item.developer}}</p>
+        
+      </ion-card-content>
+    </ion-card>
   </ion-item>
 </ion-list>
 </ion-content>
