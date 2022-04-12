@@ -46,7 +46,7 @@ export class UserPage implements OnInit {
     setTimeout(() => {
       this.listadoJuegos();
       event.target.complete();
-      if (this.juegos.length == 369) {
+      if (this.juegos.length === 369) {
         event.target.disabled = true;
       }
     }, 500);
@@ -62,7 +62,7 @@ export class UserPage implements OnInit {
     }
 }
 
-toggleMore(i){
-  this.isFull[i] = !this.isFull[i];
-}
+  toggleMore(i){
+    this.isFull[i] = !this.isFull[i];
+  }
 }
