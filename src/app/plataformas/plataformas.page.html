@@ -33,7 +33,7 @@
         <p *ngIf="isFull[i] === true">{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
         <p *ngIf="isFull[i] === false">{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
         <p>Desarrolladora: {{item.developer}}</p>
-        
+        <p>Género: {{item.genre}}</p>
       </ion-card-content>
     </ion-card>
   </ion-item>
