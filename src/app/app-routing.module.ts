@@ -30,6 +30,10 @@ const routes: Routes = [
     path: 'plataformas',
     loadChildren: () => import('./plataformas/plataformas.module').then( m => m.PlataformasPageModule)
   },
+  {
+    path: 'favoritos',
+    loadChildren: () => import('./favoritos/favoritos.module').then( m => m.FavoritosPageModule)
+  },
 
 ];
 
