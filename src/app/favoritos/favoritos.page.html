@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="primary">
+      <ion-menu-button menu="administration">
+      </ion-menu-button>
+    </ion-buttons>
+    <ion-title>Favoritos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+</ion-content>
+
+<ion-footer>
+  <ion-tab-bar>
+   <ion-tabs>
+    <ion-tab-bar slot="bottom" color="primary">
+      <ion-tab-button [routerLink]="['/juegos']">
+        <ion-icon name="game-controller-outline"></ion-icon>
+        <ion-label>Juegos</ion-label>
+      </ion-tab-button>
+      
+      <ion-tab-button [routerLink]="['/plataformas']">
+        <ion-icon name="rocket-outline"></ion-icon>
+        <ion-label>Plataformas</ion-label>
+      </ion-tab-button>
+  
+      <ion-tab-button [routerLink]="['/favoritos']">
+        <ion-icon name="heart-outline"></ion-icon>
+        <ion-label>Favoritos</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-tab-bar>
+</ion-footer>
