@@ -16,6 +16,8 @@
         <ion-thumbnail slot="start">
           <img src="{{item.thumbnail}}">
         </ion-thumbnail>
+        <ion-icon *ngIf="isFav[i] === true" (click)="fav(i)" slot="end" name="heart"></ion-icon>
+        <ion-icon *ngIf="isFav[i] === false" (click)="fav(i)" slot="end" name="heart-outline"></ion-icon>
         <ion-card-header>
           <ion-card-title>{{item.title}}</ion-card-title>
         </ion-card-header>
