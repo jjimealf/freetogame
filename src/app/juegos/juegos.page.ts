@@ -11,7 +11,9 @@ import { IonInfiniteScroll } from '@ionic/angular';
 export class UserPage implements OnInit {
 
   juegos: juego[] = [];
+  juegosFav: juego[] = [];
   isFull: boolean[] = [];
+  isFav: boolean[] = [];
   pagesI: number = 0;
   pagesF: number = 20;
 
@@ -25,6 +27,7 @@ export class UserPage implements OnInit {
   ngOnInit() {
     
   }
+  
 
   listadoJuegos(){
     this.restService.listarJuegos().then( (data: juego[]) => {
@@ -40,6 +43,7 @@ export class UserPage implements OnInit {
       }
       this.getData(data);
     })
+    
   }
 
   loadData(event){
@@ -59,10 +63,21 @@ export class UserPage implements OnInit {
   getData(data){
     for(let i=0; i<data.length; i++){
       this.isFull.push(false);
+      this.isFav.push(false);
     }
 }
 
   toggleMore(i){
     this.isFull[i] = !this.isFull[i];
+  }
+
+  fav(i){
+    this.isFav[i] = !this.isFav[i];
+    if(this.isFav[i] == true){
+     this.juegosFav.push(this.juegos[i]);
+    }else{
+      this.juegosFav.splice(this.juegosFav.findIndex(x => x.id == this.juegos[i].id), 1);
+    }
+    localStorage.setItem('fav', JSON.stringify(this.juegosFav));
   }
 }
