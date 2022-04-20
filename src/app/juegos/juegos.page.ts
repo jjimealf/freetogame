@@ -16,24 +16,29 @@ export class UserPage implements OnInit {
   isFav: boolean[] = [];
   pagesI: number = 0;
   pagesF: number = 20;
+  
 
   @ViewChild(IonInfiniteScroll, {static: true}) infiniteScroll: IonInfiniteScroll;
   
 
   constructor(public restService: RestService) {
-    this.listadoJuegos()
+     
    }
 
   ngOnInit() {
     
   }
   
+  ionViewWillEnter(){
+    this.listadoJuegos();
+  }
 
   listadoJuegos(){
     this.restService.listarJuegos().then( (data: juego[]) => {
       for(let i = this.pagesI; i < this.pagesF; i++){
         this.juegos.push(data[i]);
       }
+      this.getData(data);
 
       this.pagesI += 20;
       if(this.pagesF < 360){
@@ -41,7 +46,6 @@ export class UserPage implements OnInit {
       }else{
         this.pagesF +=9
       }
-      this.getData(data);
     })
     
   }
@@ -63,9 +67,18 @@ export class UserPage implements OnInit {
   getData(data){
     for(let i=0; i<data.length; i++){
       this.isFull.push(false);
-      this.isFav.push(false);
+      this.Fav(data, i);
     }
-}
+  }
+
+  Fav(data, i){
+    const fav: juego[] = JSON.parse(localStorage.getItem('fav'));
+      if(fav.findIndex(x => x.id == data[i].id) == -1){
+        this.isFav.push(false);
+      }else{
+        this.isFav.push(true);
+      }
+  }
 
   toggleMore(i){
     this.isFull[i] = !this.isFull[i];
