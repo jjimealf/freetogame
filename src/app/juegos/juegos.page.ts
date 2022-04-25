@@ -65,6 +65,7 @@ export class UserPage implements OnInit {
   }
 
   getData(data){
+    this.isFav = [];
     for(let i=0; i<data.length; i++){
       this.isFull.push(false);
       this.Fav(data, i);
@@ -73,11 +74,11 @@ export class UserPage implements OnInit {
 
   Fav(data, i){
     const fav: juego[] = JSON.parse(localStorage.getItem('fav'));
-      if(fav.findIndex(x => x.id == data[i].id) == -1){
-        this.isFav.push(false);
-      }else{
-        this.isFav.push(true);
-      }
+    if(fav.findIndex(x => x.id == data[i].id) == -1){
+      this.isFav.push(false);
+    }else{
+      this.isFav.push(true);
+    }
   }
 
   toggleMore(i){
