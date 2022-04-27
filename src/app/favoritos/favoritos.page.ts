@@ -12,7 +12,11 @@ export class FavoritosPage implements OnInit {
   juegosFav: juego[] = [];
   isFull: boolean[] = [];
   isFav: boolean[] = [];
-  
+  sliderOpts = {
+    allowSlidePrev: false,
+    alloSlideNext: false
+};
+
   constructor() { 
     this.listarFavoritos();
   }
