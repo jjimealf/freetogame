@@ -9,10 +9,12 @@
 </ion-header>
 
 <ion-content>
-  <ion-label *ngIf="juegosFav == null || juegosFav.length == 0">
-    <ion-title color="light">No tienes juegos favoritos</ion-title>
-  </ion-label>
-  <ion-list *ngIf="juegosFav != null">
+  <ion-slides [options]="sliderOpts" *ngIf="juegosFav == null || juegosFav.length == 0">
+    <ion-slide>
+      <ion-label color="light">No tienes juegos favoritos</ion-label>
+    </ion-slide>
+  </ion-slides>
+  <ion-list *ngIf="juegosFav.length > 0">
     <ion-item *ngFor="let item of juegosFav, let i = index"> 
       <ion-card color="primary">
         <ion-item color="primary">
