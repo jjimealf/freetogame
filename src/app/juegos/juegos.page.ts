@@ -66,20 +66,17 @@ export class UserPage implements OnInit {
 
   getData(data){
     this.isFav = [];
+    this.juegosFav = JSON.parse(localStorage.getItem('fav'));
     for(let i=0; i<data.length; i++){
       this.isFull.push(false);
-      this.Fav(data, i);
+      if(this.juegosFav == null || this.juegosFav.findIndex(x => x.id == data[i].id) == -1){
+        this.isFav.push(false);
+      }else {
+        this.isFav.push(true);
+      }
     }
   }
 
-  Fav(data, i){
-    const fav: juego[] = JSON.parse(localStorage.getItem('fav'));
-    if(fav.findIndex(x => x.id == data[i].id) == -1){
-      this.isFav.push(false);
-    }else{
-      this.isFav.push(true);
-    }
-  }
 
   toggleMore(i){
     this.isFull[i] = !this.isFull[i];
@@ -88,6 +85,9 @@ export class UserPage implements OnInit {
   fav(i){
     this.isFav[i] = !this.isFav[i];
     if(this.isFav[i] == true){
+      if(this.juegosFav == null){
+        this.juegosFav = [];
+      }
      this.juegosFav.push(this.juegos[i]);
     }else{
       this.juegosFav.splice(this.juegosFav.findIndex(x => x.id == this.juegos[i].id), 1);

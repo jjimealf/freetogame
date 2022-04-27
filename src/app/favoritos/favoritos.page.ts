@@ -22,7 +22,9 @@ export class FavoritosPage implements OnInit {
 
   listarFavoritos() {
     this.juegosFav = JSON.parse(localStorage.getItem('fav'));
-    this.getData(this.juegosFav);
+    if(this.juegosFav != null){
+      this.getData(this.juegosFav);
+    }
   }
 
   getData(data){
