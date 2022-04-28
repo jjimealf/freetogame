@@ -9,13 +9,13 @@
 </ion-header>
 
 <ion-content>
-  <ion-slides [options]="sliderOpts" *ngIf="juegosFav == null || juegosFav.length == 0">
+  <ion-slides [options]="sliderOpts" *ngIf="storageService.juegos.length === 0">
     <ion-slide>
       <ion-label color="light">No tienes juegos favoritos</ion-label>
     </ion-slide>
   </ion-slides>
-  <ion-list *ngIf="juegosFav.length > 0">
-    <ion-item *ngFor="let item of juegosFav, let i = index"> 
+  <ion-list *ngIf="storageService.juegos.length > 0">
+    <ion-item *ngFor="let item of storageService.juegos, let i = index"> 
       <ion-card color="primary">
         <ion-item color="primary">
           <ion-thumbnail slot="start">

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { juego } from '../interfaces/interface';
+import { StorageService } from '../service/storage.service';
 
 @Component({
   selector: 'app-favoritos',
@@ -9,7 +10,6 @@ import { juego } from '../interfaces/interface';
 export class FavoritosPage implements OnInit {
 
   
-  juegosFav: juego[] = [];
   isFull: boolean[] = [];
   isFav: boolean[] = [];
   sliderOpts = {
@@ -17,7 +17,7 @@ export class FavoritosPage implements OnInit {
     alloSlideNext: false
 };
 
-  constructor() { 
+  constructor( public storageService: StorageService) { 
     this.listarFavoritos();
   }
 
@@ -25,18 +25,12 @@ export class FavoritosPage implements OnInit {
   }
 
   listarFavoritos() {
-    this.juegosFav = JSON.parse(localStorage.getItem('fav'));
-    if(this.juegosFav != null){
-      this.getData(this.juegosFav);
-    }
-  }
-
-  getData(data){
-    for(let i=0; i<data.length; i++){
+    this.storageService.juegos.forEach(() => {
       this.isFull.push(false);
       this.isFav.push(true);
-    }
-}
+    });
+  }
+
 
   toggleMore(i){
     this.isFull[i] = !this.isFull[i];
@@ -45,11 +39,10 @@ export class FavoritosPage implements OnInit {
   fav(i){
     this.isFav[i] = !this.isFav[i];
     if(this.isFav[i] == false){
-      this.juegosFav.splice(i, 1);
+      this.storageService.borrarFav(this.storageService.juegos[i]);
       this.isFull.splice(i, 1);
       this.isFav.splice(i, 1);
     }
-    localStorage.setItem('fav', JSON.stringify(this.juegosFav));
   }
 }
 
