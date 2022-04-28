@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { juego } from '../interfaces/interface';
 import { RestService } from '../service/rest.service';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { StorageService } from '../service/storage.service';
 
 @Component({
   selector: 'app-juegos',
@@ -11,7 +12,6 @@ import { IonInfiniteScroll } from '@ionic/angular';
 export class UserPage implements OnInit {
 
   juegos: juego[] = [];
-  juegosFav: juego[] = [];
   isFull: boolean[] = [];
   isFav: boolean[] = [];
   pagesI: number = 0;
@@ -21,7 +21,7 @@ export class UserPage implements OnInit {
   @ViewChild(IonInfiniteScroll, {static: true}) infiniteScroll: IonInfiniteScroll;
   
 
-  constructor(public restService: RestService) {
+  constructor(public restService: RestService, public storageService: StorageService) { 
      
    }
 
@@ -64,12 +64,12 @@ export class UserPage implements OnInit {
     this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
   }
 
-  getData(data){
+  getData(data: juego[]){
     this.isFav = [];
-    this.juegosFav = JSON.parse(localStorage.getItem('fav'));
     for(let i=0; i<data.length; i++){
       this.isFull.push(false);
-      if(this.juegosFav == null || this.juegosFav.findIndex(x => x.id == data[i].id) == -1){
+      const existe = this.storageService.juegos.find(juego => juego.id === data[i].id)
+      if(!existe){
         this.isFav.push(false);
       }else {
         this.isFav.push(true);
@@ -85,13 +85,9 @@ export class UserPage implements OnInit {
   fav(i){
     this.isFav[i] = !this.isFav[i];
     if(this.isFav[i] == true){
-      if(this.juegosFav == null){
-        this.juegosFav = [];
-      }
-     this.juegosFav.push(this.juegos[i]);
+      this.storageService.guardarFav(this.juegos[i])
     }else{
-      this.juegosFav.splice(this.juegosFav.findIndex(x => x.id == this.juegos[i].id), 1);
+      this.storageService.borrarFav(this.juegos[i])
     }
-    localStorage.setItem('fav', JSON.stringify(this.juegosFav));
   }
 }
