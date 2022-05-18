@@ -49,9 +49,7 @@ export class FavoritosPage implements OnInit {
 
   añadir(i){ 
     this.carrito.push(this.storageService.juegos[i]);
-    
-
-  }
+    }
 }
 
 
