@@ -44,7 +44,7 @@ export class UserPage implements OnInit {
       if(this.pagesF < 360){
         this.pagesF += 20;
       }else{
-        this.pagesF +=9
+        this.pagesF +=10
       }
     })
     
