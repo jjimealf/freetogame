@@ -4,8 +4,12 @@
       <ion-menu-button menu="administration">
       </ion-menu-button>
     </ion-buttons>
-    <ion-title>Favoritos</ion-title>
+    <ion-title>Favoritos
+      <ion-icon *ngIf="carrito.length === 0" class='carrito' name="cart-outline" ></ion-icon>
+      <ion-icon *ngIf="carrito.length > 0" class='carrito' name="cart"></ion-icon>
+    </ion-title>
   </ion-toolbar>
+  
 </ion-header>
 
 <ion-content>
@@ -50,11 +54,13 @@
                 </ion-col>
             </ion-row>
           </ion-grid>
-          </ion-label>
-        </ion-card-content>
+        </ion-label>
+        <ion-icon name="add-outline" slot="end"></ion-icon>
+      </ion-card-content>
       </ion-card>
     </ion-item>
   </ion-list>
+
 </ion-content>
 
 <ion-footer>

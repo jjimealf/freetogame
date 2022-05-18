@@ -9,7 +9,7 @@ import { StorageService } from '../service/storage.service';
 })
 export class FavoritosPage implements OnInit {
 
-  
+  carrito: juego[] = [];
   isFull: boolean[] = [];
   isFav: boolean[] = [];
   sliderOpts = {
@@ -25,6 +25,8 @@ export class FavoritosPage implements OnInit {
   }
 
   listarFavoritos() {
+    this.isFav = []
+    this.isFull = []
     this.storageService.juegos.forEach(() => {
       this.isFull.push(false);
       this.isFav.push(true);
@@ -43,6 +45,12 @@ export class FavoritosPage implements OnInit {
       this.isFull.splice(i, 1);
       this.isFav.splice(i, 1);
     }
+  }
+
+  añadir(i){ 
+    this.carrito.push(this.storageService.juegos[i]);
+    
+
   }
 }
 
