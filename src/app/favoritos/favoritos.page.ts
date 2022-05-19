@@ -18,10 +18,15 @@ export class FavoritosPage implements OnInit {
 };
 
   constructor( public storageService: StorageService) { 
-    this.listarFavoritos();
+    
   }
 
   ngOnInit() {
+    
+  }
+
+  ionViewWillEnter(){
+    this.listarFavoritos();
   }
 
   listarFavoritos() {
@@ -47,9 +52,18 @@ export class FavoritosPage implements OnInit {
     }
   }
 
-  añadir(i){ 
-    this.carrito.push(this.storageService.juegos[i]);
-    }
+  add(i){ 
+    this.carrito.forEach(element => {
+      if(element.id != this.storageService.juegos[i].id)
+      {
+      this.carrito.push(this.storageService.juegos[i]);
+      }
+    });
+  }
+  
+  pedido(){
+    
+  }
 }
 
 

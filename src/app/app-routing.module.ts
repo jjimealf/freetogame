@@ -32,6 +32,7 @@ const routes: Routes = [
     loadChildren: () => import('./favoritos/favoritos.module').then( m => m.FavoritosPageModule)
   },
 
+
 ];
 
 @NgModule({
