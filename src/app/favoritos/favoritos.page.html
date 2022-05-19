@@ -6,7 +6,8 @@
     </ion-buttons>
     <ion-title>Favoritos
       <ion-icon *ngIf="carrito.length === 0" class='carrito' name="cart-outline" ></ion-icon>
-      <ion-icon *ngIf="carrito.length > 0" class='carrito' name="cart"></ion-icon>
+      <ion-icon *ngIf="carrito.length > 0" class='carrito' (click)="pedido()" name="cart"></ion-icon>
+      {{carrito.length}}
     </ion-title>
   </ion-toolbar>
   
@@ -53,9 +54,13 @@
                   <ion-icon name="browsers-outline"></ion-icon>
                 </ion-col>
             </ion-row>
+            <ion-row class="ion-justify-content-end">
+              <ion-col size="2">
+                 <ion-icon class="añadir" name="add-outline" (click)="add(i)"></ion-icon>
+               </ion-col>
+            </ion-row>
           </ion-grid>
         </ion-label>
-        <ion-icon name="add-outline" slot="end"></ion-icon>
       </ion-card-content>
       </ion-card>
     </ion-item>
