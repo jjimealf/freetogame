@@ -81,48 +81,19 @@ export class CarritoPage implements OnInit {
     this.pdfObj = pdfMake.createPdf(pdf);
 
     if (this.plt.is('cordova')) {
-      this.pdfObj.getBlob(buffer => {
-        this.file.resolveDirectoryUrl(this.file.dataDirectory)
-          .then(dirEntry => {
-            this.file.getFile(dirEntry, 'Resumen-Pedido.pdf', { create: true })
-              .then(fileEntry => {
-                fileEntry.createWriter(writer => {
-                  writer.onwrite = () => {
-                    this.fileOpener.showOpenWithDialog(fileEntry.toURL(), 'application/pdf')
-                      .then(res => { })
-                      .catch(async err => {
-                        const alert = this.alertCtrl.create({ message: err.message, buttons: ['Ok'] });
-                        (await alert).present();
-                      });
-                  }
-                  writer.write(buffer);
-                })
-              })
-              .catch(async err => {
-                const alert = this.alertCtrl.create({ message: err, buttons: ['Ok'] });
-                (await alert).present();
-              });
-          })
-          .catch(async err => {
-            const alert = this.alertCtrl.create({ message: err, buttons: ['Ok'] });
-            (await alert).present();
-          });
-      });
-    }else{
-      this.pdfObj.download();
-    //   this.pdfObj.getBuffer((buffer) => {
-    //     var blob = new Blob([buffer], { type: 'application/pdf' });
+      this.pdfObj.getBuffer((buffer) => {
+        var blob = new Blob([buffer], { type: 'application/pdf' });
         
-    //     // Save the PDF to the data Directory of our App
-    //     this.file.writeFile(this.file.dataDirectory, 'pedido.pdf', blob, { replace: true })
-    //     .then(fileEntry => {
-    //       // Open the PDf with the correct OS tools
-    //       this.fileOpener.open(this.file.dataDirectory + 'pedido.pdf', 'application/pdf');
-    //     })
-    //   });
-    // } else {
-    //   // On a browser simply use download!
-    //   this.pdfObj.download('pedido.pdf');
+        // Save the PDF to the data Directory of our App
+        this.file.writeFile(this.file.dataDirectory, 'pedido.pdf', blob, { replace: true })
+        .then(fileEntry => {
+          // Open the PDf with the correct OS tools
+          this.fileOpener.open(this.file.dataDirectory + 'pedido.pdf', 'application/pdf');
+        })
+      });
+    } else {
+      // On a browser simply use download!
+      this.pdfObj.download('pedido.pdf');
       
     }
   }
