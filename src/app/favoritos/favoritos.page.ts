@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { juego } from '../interfaces/interface';
 import { StorageService } from '../service/storage.service';
+import { CarritoPage } from '../carrito/carrito.page';
 
 @Component({
   selector: 'app-favoritos',
@@ -17,7 +19,7 @@ export class FavoritosPage implements OnInit {
     alloSlideNext: false
 };
 
-  constructor( public storageService: StorageService) { 
+  constructor(public storageService: StorageService, private modalCtrl: ModalController) { 
     
   }
 
@@ -53,16 +55,20 @@ export class FavoritosPage implements OnInit {
   }
 
   add(i){ 
-    this.carrito.forEach(element => {
-      if(element.id != this.storageService.juegos[i].id)
-      {
-      this.carrito.push(this.storageService.juegos[i]);
-      }
-    });
+    var id = this.carrito.find(juego => juego.id == this.storageService.juegos[i].id)
+    if(id == null){
+      this.carrito.push(this.storageService.juegos[i]);  
+    }
   }
   
-  pedido(){
-    
+  async pedido(){
+    const modal = await this.modalCtrl.create({
+      component: CarritoPage,
+      componentProps: {
+        carrito: this.carrito
+      }
+    });
+    return await modal.present();
   }
 }
 
