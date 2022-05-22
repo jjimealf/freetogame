@@ -8,14 +8,20 @@ import { FavoritosPageRoutingModule } from './favoritos-routing.module';
 
 import { FavoritosPage } from './favoritos.page';
 import { PipesModule } from '../pipes/pipes.module';
+import { CarritoPage } from '../carrito/carrito.page';
+import { CarritoPageRoutingModule } from '../carrito/carrito-routing.module';
 
 @NgModule({
+  entryComponents: [
+    CarritoPage,
+  ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     FavoritosPageRoutingModule,
-    PipesModule
+    PipesModule,
+    CarritoPageRoutingModule,
   ],
   declarations: [FavoritosPage]
 })
