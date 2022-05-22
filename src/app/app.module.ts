@@ -9,12 +9,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { PipesModule } from './pipes/pipes.module';
 import { IonicStorageModule } from '@ionic/storage-angular';
-
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 @NgModule({
   declarations: [AppComponent, CarritoPage],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, HttpClientModule, PipesModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
