@@ -68,7 +68,9 @@ export class FavoritosPage implements OnInit {
         carrito: this.carrito
       }
     });
-    return await modal.present();
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    this.carrito = data.carrito;
   }
 }
 

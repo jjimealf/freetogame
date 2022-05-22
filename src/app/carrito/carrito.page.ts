@@ -25,7 +25,7 @@ export class CarritoPage implements OnInit {
   }
 
   cancelar() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.dismiss({carrito: this.carrito});
   }
 
   getBase64ImageFromURL(url) {
@@ -96,6 +96,7 @@ export class CarritoPage implements OnInit {
       this.pdfObj.download('pedido.pdf');
       
     }
+    this.carrito = [];
   }
 
 }
