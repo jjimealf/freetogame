@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
-import { juego, juegos } from '../interfaces/interface';
+import { juego } from '../interfaces/interface';
 
 
 
@@ -11,7 +11,7 @@ import { juego, juegos } from '../interfaces/interface';
 export class RestService {
   
   token: any;
-  usuario: any;
+  email: string;
   
 
   apiUrl = 'http://semillero.allsites.es/public/api';
@@ -149,7 +149,9 @@ export class RestService {
         headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.token)
       })
       .subscribe(data => {
+        this.email = data['data']['email'];
         resolve(data)
+        console.log(this.email);
         console.log(data);
       err => {
         console.log(err)

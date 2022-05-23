@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertController, ModalController, Platform, ToastController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 import { juego } from '../interfaces/interface';
 import { File } from '@awesome-cordova-plugins/file/ngx' 
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
-
+import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
 import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { RestService } from '../service/rest.service';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -19,7 +20,7 @@ export class CarritoPage implements OnInit {
   @Input() carrito: juego[];
   pdfObj = null;
 
-  constructor(private modalCtrl: ModalController, private file: File, private fileOpener: FileOpener, private plt: Platform, private toastCtrl: ToastController, private alertCtrl: AlertController) { }
+  constructor(private modalCtrl: ModalController, private file: File, private fileOpener: FileOpener, private plt: Platform, private restService: RestService, private emailComposer: EmailComposer) { }
 
   ngOnInit() {
   }
@@ -97,6 +98,21 @@ export class CarritoPage implements OnInit {
       
     }
     this.carrito = [];
+  }
+
+  enviarPedido() {
+    let email = {
+      to: this.restService.email,
+      attachments: [
+        this.file.dataDirectory + 'pedido.pdf'
+      ],
+      subject: 'Pedido de FreeToGame',
+      body: 'Adjuntamos el PDF con el pedido de nuestra app',
+      isHtml: true
+    }
+    
+    // Send a text message using default options
+    this.emailComposer.open(email);
   }
 
 }
