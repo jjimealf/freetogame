@@ -10,9 +10,11 @@
 </ion-header>
 
 <ion-content>
-  <ion-label color="light" *ngIf="carrito.length === 0">
-    No hay juegos en el carrito
-  </ion-label>
+  <ion-item *ngIf="carrito.length === 0">
+    <ion-label color="light">
+      No hay ningún juego en el pedido actual
+    </ion-label>
+  </ion-item>
   <ion-list *ngIf="carrito.length > 0">
     <ion-item *ngFor="let item of carrito">
       <ion-thumbnail slot="start">
@@ -22,4 +24,5 @@
     </ion-item>
   </ion-list>
   <ion-button color="primary" [disabled]="carrito.length === 0" (click)="realizarPedido()">Pedir</ion-button>
+  <ion-button color="primary" [disabled]="!pdfObj" (click)="enviarPedido()">Enviar Pedido</ion-button>
 </ion-content>

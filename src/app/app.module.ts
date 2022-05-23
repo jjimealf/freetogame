@@ -11,11 +11,13 @@ import { PipesModule } from './pipes/pipes.module';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
+import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
+
 @NgModule({
   declarations: [AppComponent, CarritoPage],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, HttpClientModule, PipesModule],
-  providers: [File, FileOpener, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [File, FileOpener, EmailComposer, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
