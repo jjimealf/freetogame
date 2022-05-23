@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+    </ion-buttons>
+    <ion-title>Administracion</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+</ion-content>
+
+<ion-footer>
+  <ion-tab-bar>
+   <ion-tabs>
+    <ion-tab-bar slot="bottom" color="primary">
+
+      <ion-tab-button [routerLink]="['/admin']">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>Usuarios</ion-label>
+      </ion-tab-button>
+      
+      <ion-tab-button [routerLink]="['/grafica']">
+        <ion-icon name="pie-chart-outline"></ion-icon>
+        <ion-label>Grafica</ion-label>
+      </ion-tab-button>
+  
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-tab-bar>
+</ion-footer>
