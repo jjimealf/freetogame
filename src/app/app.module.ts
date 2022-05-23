@@ -12,11 +12,12 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent, CarritoPage],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, HttpClientModule, PipesModule],
+  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, HttpClientModule, PipesModule, NgChartsModule],
   providers: [File, FileOpener, EmailComposer, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
