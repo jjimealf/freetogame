@@ -196,4 +196,23 @@ export class RestService {
       })
     })
   }
+
+  listarJuegosPorGenero(genero: string){
+    return new Promise((resolve) => {
+      this.http.get<juego>(this.apiUrl2 + '/games?category='+genero,
+      {
+        headers: new HttpHeaders().set(
+          'X-RapidAPI-Key',
+          '9038f2620amsh062912a94ec6960p1b7f52jsn07e1954daa31'
+        )
+      })
+      .subscribe(data => {
+        resolve(data)
+        console.log(data)
+        err => {
+          console.log(err)
+        }
+      })
+    })
+  }
 }
