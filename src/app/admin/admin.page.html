@@ -14,7 +14,7 @@
   <ion-list #lista>
     <ion-item-sliding *ngFor="let usuario of usuarios">
       <ion-item *ngIf="usuario.deleted==0 && usuario.type=='u'">
-        <ion-label>
+        <ion-label color="light">
           <h3>{{ usuario.firstname }} {{ usuario.secondname }}</h3>
           <p>{{ usuario.email }}</p>
         </ion-label>

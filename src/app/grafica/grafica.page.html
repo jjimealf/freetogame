@@ -10,7 +10,20 @@
 </ion-header>
 
 <ion-content>
-
+  <div>
+    <div>
+      <div class="chart">
+        <canvas baseChart
+                [datasets]="pieChartData" 
+                [labels]="pieChartLabels" 
+                [type]="pieChartType"
+                [options]="pieChartOptions"
+                [plugins]="pieChartPlugins"
+                [legend]="pieChartLegend">
+        </canvas>
+      </div>
+    </div>
+  </div>
 </ion-content>
 
 <ion-footer>
