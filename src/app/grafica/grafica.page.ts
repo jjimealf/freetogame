@@ -29,6 +29,7 @@ export class GraficaPage implements OnInit {
   }
 
   public pieChartOptions: ChartOptions = {
+    color: '#ffffff',
     responsive: true,
   };
   public pieChartLabels;
@@ -38,7 +39,7 @@ export class GraficaPage implements OnInit {
   public pieChartPlugins = [];
 
   obtenerJuegoCategoria(i:number){
-    this.restService.listarJuegosPorGenero(this.categorias[i]).then((juegos: juego[]) => {
+    this.restService.listarJuegosPorGenero(this.categorias[i].toLowerCase()).then((juegos: juego[]) => {
       this.numJuegoCategorias.push(juegos.length);
     })
   }
