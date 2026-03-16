@@ -7,7 +7,7 @@ import { juego } from '../interfaces/interface';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+(pdfMake as any).addVirtualFileSystem(pdfFonts);
 
 @Component({
     selector: 'app-carrito',
