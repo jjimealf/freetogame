@@ -12,17 +12,14 @@ import { CarritoPage } from '../carrito/carrito.page';
 import { CarritoPageRoutingModule } from '../carrito/carrito-routing.module';
 
 @NgModule({
-  entryComponents: [
-    CarritoPage,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    FavoritosPageRoutingModule,
-    PipesModule,
-    CarritoPageRoutingModule,
-  ],
-  declarations: [FavoritosPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        FavoritosPageRoutingModule,
+        PipesModule,
+        CarritoPageRoutingModule,
+    ],
+    declarations: [FavoritosPage]
 })
 export class FavoritosPageModule {}

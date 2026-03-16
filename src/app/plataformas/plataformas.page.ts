@@ -3,9 +3,10 @@ import { juego } from '../interfaces/interface';
 import { RestService } from '../service/rest.service';
 
 @Component({
-  selector: 'app-plataformas',
-  templateUrl: './plataformas.page.html',
-  styleUrls: ['./plataformas.page.scss'],
+    selector: 'app-plataformas',
+    templateUrl: './plataformas.page.html',
+    styleUrls: ['./plataformas.page.scss'],
+    standalone: false
 })
 export class PlataformasPage implements OnInit {
 

@@ -1,26 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import {  FormGroup, 
-          FormControl, 
+import {  UntypedFormGroup, 
+          UntypedFormControl, 
           Validators, 
-          FormBuilder } from '@angular/forms';
+          UntypedFormBuilder } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { RestService } from '../service/rest.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+    selector: 'app-login',
+    templateUrl: './login.page.html',
+    styleUrls: ['./login.page.scss'],
+    standalone: false
 })
 export class LoginPage implements OnInit {
 
-  formularioLogin: FormGroup;
+  formularioLogin: UntypedFormGroup;
   ususario: any;
 
-  constructor(private route: Router, public fb: FormBuilder, public alertControler: AlertController,public restService: RestService) { 
+  constructor(private route: Router, public fb: UntypedFormBuilder, public alertControler: AlertController,public restService: RestService) { 
     this.formularioLogin = this.fb.group({
-      'email': new FormControl("", Validators.required),
-      'password': new FormControl("", Validators.required)
+      'email': new UntypedFormControl("", Validators.required),
+      'password': new UntypedFormControl("", Validators.required)
     })
 
   }

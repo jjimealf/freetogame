@@ -1,29 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { RestService } from '../service/rest.service';
-import {  FormGroup, 
-          FormControl, 
+import {  UntypedFormGroup, 
+          UntypedFormControl, 
           Validators, 
-          FormBuilder } from '@angular/forms';
+          UntypedFormBuilder } from '@angular/forms';
           import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-registro',
-  templateUrl: './registro.page.html',
-  styleUrls: ['./registro.page.scss'],
+    selector: 'app-registro',
+    templateUrl: './registro.page.html',
+    styleUrls: ['./registro.page.scss'],
+    standalone: false
 })
 export class RegistroPage implements OnInit {
 
-  formularioRegistro: FormGroup;
+  formularioRegistro: UntypedFormGroup;
 
-  constructor(private route: Router, public fb: FormBuilder, public alertControler: AlertController, public restService : RestService) {
+  constructor(private route: Router, public fb: UntypedFormBuilder, public alertControler: AlertController, public restService : RestService) {
 
     this.formularioRegistro = this.fb.group({
-      'nombre': new FormControl("", Validators.required),
-      'apellidos': new FormControl("", Validators.required),
-      'email': new FormControl("", Validators.required),
-      'password': new FormControl("", Validators.required),
-      'confirmpassword': new FormControl("", Validators.required)
+      'nombre': new UntypedFormControl("", Validators.required),
+      'apellidos': new UntypedFormControl("", Validators.required),
+      'email': new UntypedFormControl("", Validators.required),
+      'password': new UntypedFormControl("", Validators.required),
+      'confirmpassword': new UntypedFormControl("", Validators.required)
     })
 
   }

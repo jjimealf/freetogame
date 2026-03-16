@@ -11,9 +11,10 @@ import { RestService } from '../service/rest.service';
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-carrito',
-  templateUrl: './carrito.page.html',
-  styleUrls: ['./carrito.page.scss'],
+    selector: 'app-carrito',
+    templateUrl: './carrito.page.html',
+    styleUrls: ['./carrito.page.scss'],
+    standalone: false
 })
 export class CarritoPage implements OnInit {
 

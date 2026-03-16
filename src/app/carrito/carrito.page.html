@@ -10,19 +10,25 @@
 </ion-header>
 
 <ion-content>
-  <ion-item *ngIf="carrito.length === 0">
-    <ion-label color="light">
-      No hay ningún juego en el pedido actual
-    </ion-label>
-  </ion-item>
-  <ion-list *ngIf="carrito.length > 0">
-    <ion-item *ngFor="let item of carrito">
-      <ion-thumbnail slot="start">
-        <img src="{{item.thumbnail}}">
-      </ion-thumbnail>
-      <ion-label color="light">{{item.title}}</ion-label>
+  @if (carrito.length === 0) {
+    <ion-item>
+      <ion-label color="light">
+        No hay ningún juego en el pedido actual
+      </ion-label>
     </ion-item>
-  </ion-list>
+  }
+  @if (carrito.length > 0) {
+    <ion-list>
+      @for (item of carrito; track item) {
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img src="{{item.thumbnail}}">
+          </ion-thumbnail>
+          <ion-label color="light">{{item.title}}</ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
   <ion-button color="primary" [disabled]="carrito.length === 0" (click)="realizarPedido()">Pedir</ion-button>
   <ion-button color="primary" [disabled]="!pdfObj" (click)="enviarPedido()">Enviar Pedido</ion-button>
 </ion-content>

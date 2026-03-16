@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { GraficaPageRoutingModule } from './grafica-routing.module';
 
 import { GraficaPage } from './grafica.page';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { NgChartsModule } from 'ng2-charts';
     FormsModule,
     IonicModule,
     GraficaPageRoutingModule,
-    NgChartsModule
+    BaseChartDirective
   ],
   declarations: [GraficaPage]
 })

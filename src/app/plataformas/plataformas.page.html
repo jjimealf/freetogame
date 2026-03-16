@@ -18,47 +18,53 @@
 
 <ion-content>
 
-<ion-list>
-  <ion-item *ngFor="let item of juegos, let i = index">
-    <ion-card color="primary">
-      <ion-item color="primary">
-        <ion-thumbnail slot="start">
-          <img src="{{item.thumbnail}}">
-        </ion-thumbnail>
-        <ion-card-header>
-          <ion-card-title>{{item.title}}</ion-card-title>
-        </ion-card-header>
+  <ion-list>
+    @for (item of juegos; track item; let i = $index) {
+      <ion-item>
+        <ion-card color="primary">
+          <ion-item color="primary">
+            <ion-thumbnail slot="start">
+              <img src="{{item.thumbnail}}">
+            </ion-thumbnail>
+            <ion-card-header>
+              <ion-card-title>{{item.title}}</ion-card-title>
+            </ion-card-header>
+          </ion-item>
+          <ion-card-content>
+            @if (isFull[i] === true) {
+              <p>{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
+            }
+            @if (isFull[i] === false) {
+              <p>{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
+            }
+            <p>Desarrolladora: {{item.developer}}</p>
+            <p>Género: {{item.genre}}</p>
+          </ion-card-content>
+        </ion-card>
       </ion-item>
-      <ion-card-content>
-        <p *ngIf="isFull[i] === true">{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
-        <p *ngIf="isFull[i] === false">{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
-        <p>Desarrolladora: {{item.developer}}</p>
-        <p>Género: {{item.genre}}</p>
-      </ion-card-content>
-    </ion-card>
-  </ion-item>
-</ion-list>
+    }
+  </ion-list>
 </ion-content>
 
 <ion-footer>
   <ion-tab-bar>
-   <ion-tabs>
-    <ion-tab-bar slot="bottom" color="primary">
-      <ion-tab-button [routerLink]="['/juegos']">
-        <ion-icon name="game-controller-outline"></ion-icon>
-        <ion-label>Juegos</ion-label>
-      </ion-tab-button>
-      
-      <ion-tab-button [routerLink]="['/plataformas']">
-        <ion-icon name="rocket-outline"></ion-icon>
-        <ion-label>Plataformas</ion-label>
-      </ion-tab-button>
-  
-      <ion-tab-button [routerLink]="['/favoritos']">
-        <ion-icon name="heart-outline"></ion-icon>
-        <ion-label>Favoritos</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-</ion-tab-bar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom" color="primary">
+        <ion-tab-button [routerLink]="['/juegos']">
+          <ion-icon name="game-controller-outline"></ion-icon>
+          <ion-label>Juegos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button [routerLink]="['/plataformas']">
+          <ion-icon name="rocket-outline"></ion-icon>
+          <ion-label>Plataformas</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button [routerLink]="['/favoritos']">
+          <ion-icon name="heart-outline"></ion-icon>
+          <ion-label>Favoritos</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-tab-bar>
 </ion-footer>

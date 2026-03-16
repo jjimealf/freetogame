@@ -4,9 +4,10 @@ import { juego } from '../interfaces/interface';
 import { RestService } from '../service/rest.service';
 
 @Component({
-  selector: 'app-grafica',
-  templateUrl: './grafica.page.html',
-  styleUrls: ['./grafica.page.scss'],
+    selector: 'app-grafica',
+    templateUrl: './grafica.page.html',
+    styleUrls: ['./grafica.page.scss'],
+    standalone: false
 })
 export class GraficaPage implements OnInit {
 

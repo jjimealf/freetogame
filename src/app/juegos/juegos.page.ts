@@ -5,9 +5,10 @@ import { IonInfiniteScroll } from '@ionic/angular';
 import { StorageService } from '../service/storage.service';
 
 @Component({
-  selector: 'app-juegos',
-  templateUrl: './juegos.page.html',
-  styleUrls: ['./juegos.page.scss'],
+    selector: 'app-juegos',
+    templateUrl: './juegos.page.html',
+    styleUrls: ['./juegos.page.scss'],
+    standalone: false
 })
 export class UserPage implements OnInit {
 

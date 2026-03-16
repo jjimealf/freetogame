@@ -6,9 +6,10 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.page.html',
-  styleUrls: ['./admin.page.scss'],
+    selector: 'app-admin',
+    templateUrl: './admin.page.html',
+    styleUrls: ['./admin.page.scss'],
+    standalone: false
 })
 export class AdminPage implements OnInit {
   usuarios : any
