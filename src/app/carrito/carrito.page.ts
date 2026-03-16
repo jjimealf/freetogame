@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { juego } from '../interfaces/interface';
-import { File } from '@awesome-cordova-plugins/file/ngx' 
-import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
-import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
-import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { RestService } from '../service/rest.service';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -19,9 +18,11 @@ import { RestService } from '../service/rest.service';
 export class CarritoPage implements OnInit {
 
   @Input() carrito: juego[];
-  pdfObj = null;
+  pdfObj: any = null;
+  pdfFileUri: string | null = null;
+  readonly isNativePlatform = Capacitor.isNativePlatform();
 
-  constructor(private modalCtrl: ModalController, private file: File, private fileOpener: FileOpener, private plt: Platform, private restService: RestService, private emailComposer: EmailComposer) { }
+  constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
@@ -30,20 +31,20 @@ export class CarritoPage implements OnInit {
     this.modalCtrl.dismiss({carrito: this.carrito});
   }
 
-  getBase64ImageFromURL(url) {
+  getBase64ImageFromURL(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      var img = new Image();
+      const img = new Image();
       img.setAttribute("crossOrigin", "anonymous");
     
       img.onload = () => {
-        var canvas = document.createElement("canvas");
+        const canvas = document.createElement("canvas");
         canvas.width = img.width;
         canvas.height = img.height;
     
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0);
     
-        var dataURL = canvas.toDataURL("image/png");
+        const dataURL = canvas.toDataURL("image/png");
     
         resolve(dataURL);
       };
@@ -53,11 +54,49 @@ export class CarritoPage implements OnInit {
       };
     
       img.src = url;
-    });}
-    
-    
+    });
+  }
+
+  private getPdfBlob(): Promise<Blob> {
+    return new Promise((resolve) => {
+      this.pdfObj.getBlob((blob: Blob) => resolve(blob));
+    });
+  }
+
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (typeof reader.result !== 'string') {
+          reject(new Error('No se pudo convertir el PDF a base64.'));
+          return;
+        }
+
+        const [, base64Data = reader.result] = reader.result.split(',');
+        resolve(base64Data);
+      };
+
+      reader.onerror = () => reject(reader.error ?? new Error('No se pudo leer el PDF.'));
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  private async prepararPdfParaCompartir(): Promise<void> {
+    const blob = await this.getPdfBlob();
+    const data = await this.blobToBase64(blob);
+    const savedFile = await Filesystem.writeFile({
+      path: 'pedido.pdf',
+      data,
+      directory: Directory.Cache,
+      recursive: true
+    });
+
+    this.pdfFileUri = savedFile.uri;
+  }
+
   async realizarPedido() {
-    var rows = [];
+    const rows = [];
 
     for(let i=0; i<this.carrito.length; i++) {
       rows.push(['Titulo: '+this.carrito[i].title]);
@@ -81,39 +120,37 @@ export class CarritoPage implements OnInit {
       ]
     }
     this.pdfObj = pdfMake.createPdf(pdf);
+    this.pdfFileUri = null;
 
-    if (this.plt.is('cordova')) {
-      this.pdfObj.getBuffer((buffer) => {
-        var blob = new Blob([buffer], { type: 'application/pdf' });
-        
-        // Save the PDF to the data Directory of our App
-        this.file.writeFile(this.file.dataDirectory, 'pedido.pdf', blob, { replace: true })
-        .then(fileEntry => {
-          // Open the PDf with the correct OS tools
-          this.fileOpener.open(this.file.dataDirectory + 'pedido.pdf', 'application/pdf');
-        })
-      });
+    if (this.isNativePlatform) {
+      await this.prepararPdfParaCompartir();
     } else {
-      // On a browser simply use download!
       this.pdfObj.download('pedido.pdf');
-      
     }
+
     this.carrito = [];
   }
 
-  enviarPedido() {
-    let email = {
-      to: this.restService.email,
-      attachments: [
-        this.file.dataDirectory + 'pedido.pdf'
-      ],
-      subject: 'Pedido de FreeToGame',
-      body: 'Adjuntamos el PDF con el pedido de nuestra app',
-      isHtml: true
+  async compartirPedido() {
+    if (!this.pdfObj) {
+      return;
     }
-    
-    // Send a text message using default options
-    this.emailComposer.open(email);
+
+    if (!this.isNativePlatform) {
+      this.pdfObj.download('pedido.pdf');
+      return;
+    }
+
+    if (!this.pdfFileUri) {
+      await this.prepararPdfParaCompartir();
+    }
+
+    await Share.share({
+      title: 'Pedido de FreeToGame',
+      text: 'Pedido generado en FreeToGame',
+      url: this.pdfFileUri ?? undefined,
+      dialogTitle: 'Compartir pedido'
+    });
   }
 
 }

@@ -13,7 +13,7 @@
   @if (carrito.length === 0) {
     <ion-item>
       <ion-label color="light">
-        No hay ningún juego en el pedido actual
+        No hay ningun juego en el pedido actual
       </ion-label>
     </ion-item>
   }
@@ -30,5 +30,7 @@
     </ion-list>
   }
   <ion-button color="primary" [disabled]="carrito.length === 0" (click)="realizarPedido()">Pedir</ion-button>
-  <ion-button color="primary" [disabled]="!pdfObj" (click)="enviarPedido()">Enviar Pedido</ion-button>
+  @if (isNativePlatform) {
+    <ion-button color="primary" [disabled]="!pdfFileUri" (click)="compartirPedido()">Compartir Pedido</ion-button>
+  }
 </ion-content>

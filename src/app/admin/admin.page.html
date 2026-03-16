@@ -14,7 +14,7 @@
   <ion-list #lista>
     @for (usuario of usuarios; track usuario) {
       <ion-item-sliding>
-        @if (usuario.deleted==0 && usuario.type=='u') {
+        @if (usuario.deleted === 0 && usuario.type === 'u') {
           <ion-item>
             <ion-label color="light">
               <h3>{{ usuario.firstname }} {{ usuario.secondname }}</h3>
@@ -23,12 +23,12 @@
           </ion-item>
         }
         <ion-item-options side="start">
-          @if (usuario.actived==0) {
+          @if (usuario.actived === 0) {
             <ion-item-option color="success" (click)="activar(usuario.id)">
               <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
             </ion-item-option>
           }
-          @if (usuario.actived==1) {
+          @if (usuario.actived === 1) {
             <ion-item-option color="danger" (click)="desactivar(usuario.id)">
               <ion-icon slot="icon-only" name="close-outline"></ion-icon>
             </ion-item-option>
