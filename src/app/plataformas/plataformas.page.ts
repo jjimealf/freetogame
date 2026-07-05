@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { juego } from '../interfaces/interface';
-import { RestService } from '../service/rest.service';
+import { GamesService } from '../core/games/games.service';
+import { Game, GamePlatformFilter } from '../core/models/game.model';
 
 @Component({
     selector: 'app-plataformas',
@@ -9,30 +9,46 @@ import { RestService } from '../service/rest.service';
     standalone: false
 })
 export class PlataformasPage implements OnInit {
+  juegos: Game[]= [];
+  loading = false;
+  errorMessage = '';
 
-  juegos: juego[]= [];
-  isFull: boolean[] = [];
+  private expandedIds = new Set<number>();
 
-  constructor(private restService: RestService) { }
+  constructor(private readonly gamesService: GamesService) { }
 
   ngOnInit() {
-    this.segmentChanged({detail:{value:'pc'}});
+    void this.loadPlatform('pc');
   }
 
-  segmentChanged(ev: any) {
-    this.restService.listarJuegosPorPlataforma(ev.detail.value).then((juegos: juego[]) =>{
-      this.juegos = juegos;
-      this.getData(juegos);
-    })
+  segmentChanged(ev: CustomEvent<{ value: GamePlatformFilter }>) {
+    void this.loadPlatform(ev.detail.value);
   }
 
-  getData(data){
-    for(let i=0; i<data.length; i++){
-      this.isFull.push(false);
+  isExpanded(gameId: number): boolean {
+    return this.expandedIds.has(gameId);
+  }
+
+  toggleMore(gameId: number): void {
+    if (this.expandedIds.has(gameId)) {
+      this.expandedIds.delete(gameId);
+    } else {
+      this.expandedIds.add(gameId);
     }
   }
 
-  toggleMore(i){
-    this.isFull[i] = !this.isFull[i];
+  private async loadPlatform(platform: GamePlatformFilter): Promise<void> {
+    this.loading = true;
+    this.errorMessage = '';
+    this.expandedIds.clear();
+
+    try {
+      this.juegos = await this.gamesService.listGamesByPlatform(platform);
+    } catch (error) {
+      this.juegos = [];
+      this.errorMessage = 'No se pudieron cargar los juegos de esta plataforma.';
+    } finally {
+      this.loading = false;
+    }
   }
 }

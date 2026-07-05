@@ -1,116 +1,41 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="primary">
-      <ion-menu-button menu="administration">
-      </ion-menu-button>
+      <ion-menu-button menu="administration"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Favoritos
-      @if (carrito.length === 0) {
-        <ion-icon class='carrito' name="cart-outline" ></ion-icon>
-      }
-      @if (carrito.length > 0) {
-        <ion-icon class='carrito' (click)="pedido()" name="cart"></ion-icon>
-      }
-      {{carrito.length}}
+    <ion-title>
+      Favoritos
+      <ion-button fill="clear" class="cart-button" [disabled]="carrito.length === 0" (click)="pedido()">
+        <ion-icon [name]="carrito.length === 0 ? 'cart-outline' : 'cart'"></ion-icon>
+        <ion-badge color="secondary">{{ carrito.length }}</ion-badge>
+      </ion-button>
     </ion-title>
   </ion-toolbar>
-
 </ion-header>
 
-<ion-content>
-  @if (storageService.juegos.length === 0) {
-    <ion-slides [options]="sliderOpts">
-      <ion-slide>
-        <ion-label color="light">No tienes juegos favoritos</ion-label>
-      </ion-slide>
-    </ion-slides>
+<ion-content class="app-page">
+  @if (favoritos.length === 0) {
+    <section class="app-state">
+      <ion-icon name="heart-outline"></ion-icon>
+      <h2>No tienes juegos favoritos</h2>
+      <p>Marca juegos desde el catalogo para guardarlos en tu cuenta.</p>
+    </section>
   }
-  @if (storageService.juegos.length > 0) {
-    <ion-list>
-      @for (item of storageService.juegos; track item; let i = $index) {
-        <ion-item>
-          <ion-card color="primary">
-            <ion-item color="primary">
-              <ion-thumbnail slot="start">
-                <img src="{{item.thumbnail}}">
-              </ion-thumbnail>
-              @if (isFav[i] === true) {
-                <ion-icon (click)="fav(i)" slot="end" name="heart"></ion-icon>
-              }
-              @if (isFav[i] === false) {
-                <ion-icon (click)="fav(i)" slot="end" name="heart-outline"></ion-icon>
-              }
-              <ion-card-header>
-                <ion-card-title>{{item.title}}</ion-card-title>
-              </ion-card-header>
-            </ion-item>
-            <ion-card-content>
-              @if (isFull[i] === true) {
-                <p>{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
-              }
-              @if (isFull[i] === false) {
-                <p>{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
-              }
-              <p>Desarrolladora: {{item.developer}}</p>
-              <ion-label>Plataformas:
-                <ion-grid>
-                  <ion-row>
-                    <ion-col size="2" >
-                      @if (item.platform === 'PC (Windows)' ) {
-                        <ion-icon name="logo-windows"></ion-icon>
-                      }
-                    </ion-col>
-                    <ion-col size="2" >
-                      @if (item.platform === 'Web Browser' ) {
-                        <ion-icon name="browsers-outline"></ion-icon>
-                      }
-                    </ion-col>
-                  </ion-row>
-                  @if (item.platform === 'PC (Windows), Web Browser') {
-                    <ion-row>
-                      <ion-col size="2" >
-                        <ion-icon name="logo-windows"></ion-icon>
-                      </ion-col>
-                      <ion-col size="2" >
-                        <ion-icon name="browsers-outline"></ion-icon>
-                      </ion-col>
-                    </ion-row>
-                  }
-                  <ion-row class="ion-justify-content-end">
-                    <ion-col size="2">
-                      <ion-icon class="añadir" name="add-outline" (click)="add(i)"></ion-icon>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-label>
-            </ion-card-content>
-          </ion-card>
-        </ion-item>
+  @if (favoritos.length > 0) {
+    <section class="game-grid app-container">
+      @for (item of favoritos; track item.id) {
+        <app-game-card
+          [game]="item"
+          [favorite]="true"
+          [showCartAction]="true"
+          [expanded]="isExpanded(item.id)"
+          (favoriteToggle)="fav(item)"
+          (cartAdd)="add(item)"
+          (expandedToggle)="toggleMore(item.id)">
+        </app-game-card>
       }
-    </ion-list>
+    </section>
   }
-
 </ion-content>
 
-<ion-footer>
-  <ion-tab-bar>
-    <ion-tabs>
-      <ion-tab-bar slot="bottom" color="primary">
-        <ion-tab-button [routerLink]="['/juegos']">
-          <ion-icon name="game-controller-outline"></ion-icon>
-          <ion-label>Juegos</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button [routerLink]="['/plataformas']">
-          <ion-icon name="rocket-outline"></ion-icon>
-          <ion-label>Plataformas</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button [routerLink]="['/favoritos']">
-          <ion-icon name="heart-outline"></ion-icon>
-          <ion-label>Favoritos</ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-  </ion-tab-bar>
-</ion-footer>
+<app-tabs mode="user"></app-tabs>

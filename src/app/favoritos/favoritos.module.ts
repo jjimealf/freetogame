@@ -10,6 +10,7 @@ import { FavoritosPage } from './favoritos.page';
 import { PipesModule } from '../pipes/pipes.module';
 import { CarritoPage } from '../carrito/carrito.page';
 import { CarritoPageRoutingModule } from '../carrito/carrito-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     imports: [
@@ -19,6 +20,7 @@ import { CarritoPageRoutingModule } from '../carrito/carrito-routing.module';
         FavoritosPageRoutingModule,
         PipesModule,
         CarritoPageRoutingModule,
+        SharedModule,
     ],
     declarations: [FavoritosPage]
 })

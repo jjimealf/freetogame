@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { RestService } from '../service/rest.service';
-import { ViewChild } from '@angular/core';
-import { IonList} from '@ionic/angular';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AlertController, IonList } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { UserProfile } from '../core/models/user-profile.model';
+import { FeedbackService } from '../core/ui/feedback.service';
+import { UsersService } from '../core/users/users.service';
 
 @Component({
     selector: 'app-admin',
@@ -12,72 +12,75 @@ import { AlertController } from '@ionic/angular';
     standalone: false
 })
 export class AdminPage implements OnInit {
-  usuarios : any
+  usuarios$: Observable<UserProfile[]> = this.usersService.listUsers();
 
-  //Referencia 
-  @ViewChild('lista',{static:true}) lista: IonList;
-  
-  constructor(private restService : RestService, private route: Router, private alertCtrl: AlertController) {
+  @ViewChild('lista') lista?: IonList;
 
-  }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly alertController: AlertController,
+    private readonly feedback: FeedbackService
+  ) {}
 
   ngOnInit() {
-    
-    if(this.restService.token != undefined){
+  }
 
-      this.restService.obtenerUsuarios()
-    .then(usuario => {
-      this.usuarios = usuario.data;
-    });
-
-    }
-    else{
-      this.route.navigate(['/login']);
+  statusLabel(usuario: UserProfile): string {
+    if (usuario.active) {
+      return 'Activo';
     }
 
+    return this.wasUpdated(usuario) ? 'Desactivado' : 'Pendiente';
   }
 
-  activar(id: number) {
-    this.restService.activarUsuario(id);
-    this.lista.closeSlidingItems();
-    this.ngOnInit();
-    this.ngOnInit();
+  statusColor(usuario: UserProfile): 'success' | 'warning' | 'medium' {
+    if (usuario.active) {
+      return 'success';
+    }
+
+    return this.wasUpdated(usuario) ? 'medium' : 'warning';
   }
 
-  desactivar(id: number) {
-    this.restService.desactivarUsuario(id);
-    this.lista.closeSlidingItems();
-    this.ngOnInit();
-    this.ngOnInit();
+  async activar(uid: string): Promise<void> {
+    await this.usersService.setActive(uid, true);
+    await this.lista?.closeSlidingItems();
+    await this.feedback.showToast('Usuario activado.', 'success');
   }
 
+  async desactivar(uid: string): Promise<void> {
+    await this.usersService.setActive(uid, false);
+    await this.lista?.closeSlidingItems();
+    await this.feedback.showToast('Usuario desactivado.', 'warning');
+  }
 
-  async eliminar(id: number) {
-    const alert = await this.alertCtrl.create({
-      message: '¿Estas seguro de eliminar al usuario?',
+  async eliminar(usuario: UserProfile): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Eliminar usuario',
+      message: `Se ocultara la cuenta de ${usuario.displayName || usuario.email}.`,
       buttons: [
         {
-          text: 'Cancel',
-          role: 'cancel',	
-          cssClass: 'secondary',
-          handler: () => {}
-       },
-       {
-         text: 'OK',
-         handler: () => {
-          this.restService.eliminarUsuario(id)
-          this.ngOnInit();
-          this.ngOnInit();
-         }
-      }
-
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: async () => {
+            await this.usersService.softDelete(usuario.uid);
+            await this.feedback.showToast('Usuario eliminado.', 'danger');
+          }
+        }
       ]
     });
 
     await alert.present();
-
-    this.lista.closeSlidingItems();
-    
+    await this.lista?.closeSlidingItems();
   }
 
+  private wasUpdated(usuario: UserProfile): boolean {
+    return typeof usuario.createdAt?.isEqual === 'function'
+      ? !usuario.createdAt.isEqual(usuario.updatedAt)
+      : false;
+  }
 }

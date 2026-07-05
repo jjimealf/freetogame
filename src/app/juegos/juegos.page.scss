@@ -1,0 +1,15 @@
+.page-state {
+  display: grid;
+  place-items: center;
+  gap: 0.75rem;
+  min-height: 45vh;
+  padding: 2rem;
+  color: #b8c7e6;
+  text-align: center;
+}
+
+.toggle-copy {
+  color: #63e6ff;
+  cursor: pointer;
+  font-weight: 700;
+}

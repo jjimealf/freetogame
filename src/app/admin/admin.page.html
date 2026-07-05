@@ -1,7 +1,5 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-    </ion-buttons>
     <ion-title>Administracion</ion-title>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
@@ -9,57 +7,59 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="admin-screen">
+  <section class="admin-hero">
+    <p>Panel de activacion</p>
+    <h1>Usuarios registrados</h1>
+    <span>Activa cuentas verificadas, pausa accesos o elimina usuarios sin borrar credenciales.</span>
+  </section>
 
-  <ion-list #lista>
-    @for (usuario of usuarios; track usuario) {
-      <ion-item-sliding>
-        @if (usuario.deleted === 0 && usuario.type === 'u') {
-          <ion-item>
-            <ion-label color="light">
-              <h3>{{ usuario.firstname }} {{ usuario.secondname }}</h3>
+  @if (usuarios$ | async; as usuarios) {
+    <ion-list #lista class="user-list">
+      @for (usuario of usuarios; track usuario.uid) {
+        <ion-item-sliding>
+          <ion-item class="user-row">
+            <ion-label>
+              <div class="user-title">
+                <h2>{{ usuario.displayName || (usuario.firstName + ' ' + usuario.secondName) }}</h2>
+                <ion-badge [color]="statusColor(usuario)">{{ statusLabel(usuario) }}</ion-badge>
+              </div>
               <p>{{ usuario.email }}</p>
             </ion-label>
           </ion-item>
-        }
-        <ion-item-options side="start">
-          @if (usuario.actived === 0) {
-            <ion-item-option color="success" (click)="activar(usuario.id)">
-              <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
-            </ion-item-option>
-          }
-          @if (usuario.actived === 1) {
-            <ion-item-option color="danger" (click)="desactivar(usuario.id)">
-              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-            </ion-item-option>
-          }
-        </ion-item-options>
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="eliminar(usuario.id)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-    }
-  </ion-list>
 
+          <ion-item-options side="start">
+            @if (!usuario.active) {
+              <ion-item-option color="success" (click)="activar(usuario.uid)">
+                <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+              </ion-item-option>
+            }
+            @if (usuario.active) {
+              <ion-item-option color="warning" (click)="desactivar(usuario.uid)">
+                <ion-icon slot="icon-only" name="pause-outline"></ion-icon>
+              </ion-item-option>
+            }
+          </ion-item-options>
+
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="eliminar(usuario)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      } @empty {
+        <div class="empty-state">
+          <h2>No hay usuarios pendientes</h2>
+          <p>Cuando alguien se registre aparecera aqui para activarlo.</p>
+        </div>
+      }
+    </ion-list>
+  } @else {
+    <div class="empty-state">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando usuarios...</p>
+    </div>
+  }
 </ion-content>
-<ion-footer>
-  <ion-tab-bar>
-    <ion-tabs>
-      <ion-tab-bar slot="bottom" color="primary">
 
-        <ion-tab-button [routerLink]="['/admin']">
-          <ion-icon name="person-outline"></ion-icon>
-          <ion-label>Usuarios</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button [routerLink]="['/grafica']">
-          <ion-icon name="pie-chart-outline"></ion-icon>
-          <ion-label>Grafica</ion-label>
-        </ion-tab-button>
-
-      </ion-tab-bar>
-    </ion-tabs>
-  </ion-tab-bar>
-</ion-footer>
+<app-tabs mode="admin"></app-tabs>

@@ -1,12 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="primary">
-      <ion-menu-button menu="administration">
-      </ion-menu-button>
+      <ion-menu-button menu="administration"></ion-menu-button>
     </ion-buttons>
     <ion-title>Plataformas</ion-title>
   </ion-toolbar>
-  <ion-segment (ionChange)="segmentChanged($event)" value="pc" >
+  <ion-segment (ionChange)="segmentChanged($event)" value="pc">
     <ion-segment-button value="pc">
       <ion-label color="light">PC (Windows)</ion-label>
     </ion-segment-button>
@@ -16,55 +15,30 @@
   </ion-segment>
 </ion-header>
 
-<ion-content>
-
-  <ion-list>
-    @for (item of juegos; track item; let i = $index) {
-      <ion-item>
-        <ion-card color="primary">
-          <ion-item color="primary">
-            <ion-thumbnail slot="start">
-              <img src="{{item.thumbnail}}">
-            </ion-thumbnail>
-            <ion-card-header>
-              <ion-card-title>{{item.title}}</ion-card-title>
-            </ion-card-header>
-          </ion-item>
-          <ion-card-content>
-            @if (isFull[i] === true) {
-              <p>{{item.short_description}} <span style="color: #222428" (click)="toggleMore(i)">... ver menos</span></p>
-            }
-            @if (isFull[i] === false) {
-              <p>{{item.short_description | filtro :10}} <span style="color: #222428" (click)="toggleMore(i)">... ver mas</span></p>
-            }
-            <p>Desarrolladora: {{item.developer}}</p>
-            <p>Género: {{item.genre}}</p>
-          </ion-card-content>
-        </ion-card>
-      </ion-item>
-    }
-  </ion-list>
+<ion-content class="app-page">
+  @if (loading) {
+    <section class="app-state">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando juegos...</p>
+    </section>
+  }
+  @if (errorMessage) {
+    <section class="app-state">
+      <p>{{ errorMessage }}</p>
+    </section>
+  }
+  @if (!loading && !errorMessage) {
+    <section class="game-grid app-container">
+      @for (item of juegos; track item.id) {
+        <app-game-card
+          [game]="item"
+          [showFavoriteAction]="false"
+          [expanded]="isExpanded(item.id)"
+          (expandedToggle)="toggleMore(item.id)">
+        </app-game-card>
+      }
+    </section>
+  }
 </ion-content>
 
-<ion-footer>
-  <ion-tab-bar>
-    <ion-tabs>
-      <ion-tab-bar slot="bottom" color="primary">
-        <ion-tab-button [routerLink]="['/juegos']">
-          <ion-icon name="game-controller-outline"></ion-icon>
-          <ion-label>Juegos</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button [routerLink]="['/plataformas']">
-          <ion-icon name="rocket-outline"></ion-icon>
-          <ion-label>Plataformas</ion-label>
-        </ion-tab-button>
-
-        <ion-tab-button [routerLink]="['/favoritos']">
-          <ion-icon name="heart-outline"></ion-icon>
-          <ion-label>Favoritos</ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-  </ion-tab-bar>
-</ion-footer>
+<app-tabs mode="user"></app-tabs>

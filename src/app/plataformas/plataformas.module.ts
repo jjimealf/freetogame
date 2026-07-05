@@ -8,6 +8,7 @@ import { PlataformasPageRoutingModule } from './plataformas-routing.module';
 
 import { PlataformasPage } from './plataformas.page';
 import { PipesModule } from '../pipes/pipes.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { PipesModule } from '../pipes/pipes.module';
     FormsModule,
     IonicModule,
     PlataformasPageRoutingModule,
-    PipesModule
+    PipesModule,
+    SharedModule
   ],
   declarations: [PlataformasPage]
 })

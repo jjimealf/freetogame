@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartType, ChartOptions } from 'chart.js';
-import { juego } from '../interfaces/interface';
-import { RestService } from '../service/rest.service';
+import { ChartOptions, ChartType } from 'chart.js';
+import { GamesService } from '../core/games/games.service';
 
 @Component({
     selector: 'app-grafica',
@@ -10,38 +9,44 @@ import { RestService } from '../service/rest.service';
     standalone: false
 })
 export class GraficaPage implements OnInit {
+  categorias: string[]= ['MMORPG', 'Shooter', 'MMO', 'Social', 'MOBA', 'Fighting'];
+  loading = false;
+  errorMessage = '';
 
-  categorias: string[]= ["MMORPG", "Shooter", "MMO", "Social", "MOBA", "Fighting"];
-  juegosCategorias: juego[] = [];
-  numJuegoCategorias: number[] = [];
-
-  constructor(private restService: RestService) { 
-    
-  }
+  constructor(private readonly gamesService: GamesService) {}
 
   ngOnInit() {
-    this.numJuegoCategorias = [];
-    for(let i=0; i<6; i++){
-      this.obtenerJuegoCategoria(i);
-    }
-
-    this.pieChartLabels = [[this.categorias[0]], [this.categorias[1]], [this.categorias[2]], [this.categorias[3]], [this.categorias[4]], [this.categorias[5]]];
-    this.pieChartData = [{data: this.numJuegoCategorias}];
+    void this.loadChartData();
   }
 
   public pieChartOptions: ChartOptions = {
     color: '#ffffff',
     responsive: true,
   };
-  public pieChartLabels;
-  public pieChartData;
+  public pieChartLabels = this.categorias.map((categoria) => [categoria]);
+  public pieChartData: { data: number[] }[] = [{ data: [] }];
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
   public pieChartPlugins = [];
 
-  obtenerJuegoCategoria(i:number){
-    this.restService.listarJuegosPorGenero(this.categorias[i].toLowerCase()).then((juegos: juego[]) => {
-      this.numJuegoCategorias.push(juegos.length);
-    })
+  private async loadChartData(): Promise<void> {
+    this.loading = true;
+    this.errorMessage = '';
+
+    try {
+      const counts = await Promise.all(
+        this.categorias.map(async (categoria) => {
+          const games = await this.gamesService.listGamesByCategory(categoria.toLowerCase());
+          return games.length;
+        })
+      );
+
+      this.pieChartData = [{ data: counts }];
+    } catch (error) {
+      this.errorMessage = 'No se pudieron cargar los datos de la grafica.';
+      this.pieChartData = [{ data: [] }];
+    } finally {
+      this.loading = false;
+    }
   }
 }

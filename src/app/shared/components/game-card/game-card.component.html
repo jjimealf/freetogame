@@ -1,0 +1,54 @@
+<ion-card class="game-card">
+  <div class="game-art">
+    <img [src]="game.thumbnail" [alt]="game.title">
+    <div class="game-actions">
+      @if (showFavoriteAction) {
+        <ion-button fill="clear" size="small" (click)="favoriteToggle.emit(game)" [attr.aria-label]="favorite ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+          <ion-icon [name]="favorite ? 'heart' : 'heart-outline'"></ion-icon>
+        </ion-button>
+      }
+      @if (showCartAction) {
+        <ion-button fill="clear" size="small" (click)="cartAdd.emit(game)" aria-label="Agregar al carrito">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      }
+    </div>
+  </div>
+
+  <ion-card-header>
+    <div class="game-meta">
+      <ion-badge color="secondary">{{ game.genre }}</ion-badge>
+      <span>{{ game.release_date }}</span>
+    </div>
+    <ion-card-title>{{ game.title }}</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    @if (expanded) {
+      <p>{{ game.short_description }} <button type="button" class="text-toggle" (click)="expandedToggle.emit(game)">ver menos</button></p>
+    }
+    @if (!expanded) {
+      <p>{{ game.short_description | filtro:18 }} <button type="button" class="text-toggle" (click)="expandedToggle.emit(game)">ver mas</button></p>
+    }
+
+    <div class="game-detail">
+      <span>Desarrolladora</span>
+      <strong>{{ game.developer }}</strong>
+    </div>
+
+    <div class="platforms" aria-label="Plataformas">
+      @if (supportsWindows()) {
+        <ion-chip color="primary">
+          <ion-icon name="logo-windows"></ion-icon>
+          <ion-label>PC</ion-label>
+        </ion-chip>
+      }
+      @if (supportsBrowser()) {
+        <ion-chip color="tertiary">
+          <ion-icon name="browsers-outline"></ion-icon>
+          <ion-label>Web</ion-label>
+        </ion-chip>
+      }
+    </div>
+  </ion-card-content>
+</ion-card>

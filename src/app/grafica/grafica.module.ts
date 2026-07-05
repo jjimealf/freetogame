@@ -8,6 +8,7 @@ import { GraficaPageRoutingModule } from './grafica-routing.module';
 
 import { GraficaPage } from './grafica.page';
 import { BaseChartDirective } from 'ng2-charts';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { BaseChartDirective } from 'ng2-charts';
     FormsModule,
     IonicModule,
     GraficaPageRoutingModule,
-    BaseChartDirective
+    BaseChartDirective,
+    SharedModule
   ],
   declarations: [GraficaPage]
 })

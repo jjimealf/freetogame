@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {  UntypedFormGroup, 
-          UntypedFormControl, 
-          Validators, 
-          UntypedFormBuilder } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
-import { RestService } from '../service/rest.service';
-import { Router } from '@angular/router';
+import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthFailure, AuthService } from '../core/auth/auth.service';
+import { FeedbackService } from '../core/ui/feedback.service';
+
+type LoginForm = FormGroup<{
+  email: FormControl<string>;
+  password: FormControl<string>;
+}>;
 
 @Component({
     selector: 'app-login',
@@ -14,71 +16,56 @@ import { Router } from '@angular/router';
     standalone: false
 })
 export class LoginPage implements OnInit {
+  formularioLogin: LoginForm;
 
-  formularioLogin: UntypedFormGroup;
-  ususario: any;
-
-  constructor(private route: Router, public fb: UntypedFormBuilder, public alertControler: AlertController,public restService: RestService) { 
-    this.formularioLogin = this.fb.group({
-      'email': new UntypedFormControl("", Validators.required),
-      'password': new UntypedFormControl("", Validators.required)
-    })
-
+  constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly formBuilder: NonNullableFormBuilder,
+    private readonly authService: AuthService,
+    private readonly feedback: FeedbackService
+  ) {
+    this.formularioLogin = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
   }
 
   ngOnInit() {
-  
+    const message = this.activatedRoute.snapshot.queryParamMap.get('message');
+
+    if (message !== null) {
+      void this.feedback.showToast(message, 'warning');
+    }
   }
 
-  async login(){
+  get email(): FormControl<string> {
+    return this.formularioLogin.controls.email;
+  }
 
-    if(this.formularioLogin.invalid){
-      const alert = await this.alertControler.create({
-        header: 'Fallo al iniciar sesion',
-        message: 'Datos incompletos',
-        buttons: ['Aceptar'],
-      });
-      await alert.present();
+  get password(): FormControl<string> {
+    return this.formularioLogin.controls.password;
+  }
+
+  async login(): Promise<void> {
+    if (this.formularioLogin.invalid) {
+      this.formularioLogin.markAllAsTouched();
+      await this.feedback.showAlert('Datos incompletos', 'Introduce un correo valido y tu contrasena.');
       return;
     }
 
-    this.restService.login(this.formularioLogin.value.email, this.formularioLogin.value.password)
-    .then(async data => {
-      this.ususario = data;
-      this.ususario = this.ususario.data;
-      this.restService.obtenerUsuario(this.ususario.id)
-      .then(async user => {
-        this.ususario = user;
-        this.ususario = this.ususario.data;
-        if(this.ususario.email_confirmed==1){
-          if(this.ususario.actived==1){
-            if(this.ususario.type=='a'){
-              this.route.navigate(['/admin'])
-            }else{
-              this.route.navigate(['/juegos'])
-            }
-          }else{
-              const alert2 = await this.alertControler.create({
-                header: 'Usuario no activado',
-                message: 'Espere a que el administrador active su cuenta',
-                buttons: ['Aceptar'],
-              });
-              await alert2.present();
-              return;
-            }
-          }else{
-            const alert3 = await this.alertControler.create({
-              header: 'Email no confirmado',
-              message: 'Revise su correo para confirmar el registro',
-              buttons: ['Aceptar'],
-            });
-            await alert3.present();
-            return;
-        }
-      })
+    const { email, password } = this.formularioLogin.getRawValue();
 
-    })
-
+    try {
+      await this.feedback.withLoading('Iniciando sesion...', () => this.authService.signIn(email, password));
+      const profile = await this.authService.getCurrentProfile();
+      await this.router.navigate([profile?.role === 'admin' ? '/admin' : '/juegos']);
+    } catch (error) {
+      await this.feedback.showAlert('No se pudo iniciar sesion', this.getErrorMessage(error));
+    }
   }
 
+  private getErrorMessage(error: unknown): string {
+    return error instanceof AuthFailure ? error.message : 'No se pudo completar el inicio de sesion.';
+  }
 }

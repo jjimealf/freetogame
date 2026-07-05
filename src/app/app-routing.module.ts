@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { activeUserGuard, adminGuard } from './core/auth/auth.guards';
 
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
   },
   {
     path: '',
@@ -13,30 +14,33 @@ const routes: Routes = [
   },
   {
     path: 'registro',
-    loadChildren: () => import('./registro/registro.module').then( m => m.RegistroPageModule)
+    loadChildren: () => import('./registro/registro.module').then(m => m.RegistroPageModule)
   },
   {
     path: 'admin',
-    loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
+    canActivate: [adminGuard],
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminPageModule)
   },
   {
     path: 'juegos',
-    loadChildren: () => import('./juegos/juegos.module').then( m => m.UserPageModule)
+    canActivate: [activeUserGuard],
+    loadChildren: () => import('./juegos/juegos.module').then(m => m.UserPageModule)
   },
   {
     path: 'plataformas',
-    loadChildren: () => import('./plataformas/plataformas.module').then( m => m.PlataformasPageModule)
+    canActivate: [activeUserGuard],
+    loadChildren: () => import('./plataformas/plataformas.module').then(m => m.PlataformasPageModule)
   },
   {
     path: 'favoritos',
-    loadChildren: () => import('./favoritos/favoritos.module').then( m => m.FavoritosPageModule)
-  },  {
-    path: 'grafica',
-    loadChildren: () => import('./grafica/grafica.module').then( m => m.GraficaPageModule)
+    canActivate: [activeUserGuard],
+    loadChildren: () => import('./favoritos/favoritos.module').then(m => m.FavoritosPageModule)
   },
-
-
-
+  {
+    path: 'grafica',
+    canActivate: [activeUserGuard],
+    loadChildren: () => import('./grafica/grafica.module').then(m => m.GraficaPageModule)
+  }
 ];
 
 @NgModule({

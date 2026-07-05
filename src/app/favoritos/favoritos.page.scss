@@ -1,15 +1,13 @@
-ion-slides,
-ion-slide {
-    width: 100%;
-    height: 100%;
+.cart-button {
+    --color: #63e6ff;
+    margin-left: 0.5rem;
 }
 
-.carrito{
-    --ionicon-stroke-width: 32px;
-    font-size: 25px;
-    margin-left: 50%;
+.cart-button ion-badge {
+    margin-left: 0.25rem;
 }
 
-.añadir{
-    font-size: 25px;
+.app-state ion-icon {
+    color: #63e6ff;
+    font-size: 4rem;
 }

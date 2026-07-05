@@ -11,6 +11,18 @@
 
 <ion-content>
   <ion-title color="light" class="ion-margin">Nº de juegos por categorias</ion-title>
+  @if (loading) {
+    <section class="chart-state">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando datos...</p>
+    </section>
+  }
+  @if (errorMessage) {
+    <section class="chart-state">
+      <p>{{ errorMessage }}</p>
+    </section>
+  }
+  @if (!loading && !errorMessage) {
       <div class="chart">
         <canvas baseChart
                 [datasets]="pieChartData" 
@@ -21,24 +33,7 @@
                 [legend]="pieChartLegend">
         </canvas>
       </div>
+  }
 </ion-content>
 
-<ion-footer>
-  <ion-tab-bar>
-   <ion-tabs>
-    <ion-tab-bar slot="bottom" color="primary">
-
-      <ion-tab-button [routerLink]="['/admin']">
-        <ion-icon name="person-outline"></ion-icon>
-        <ion-label>Usuarios</ion-label>
-      </ion-tab-button>
-      
-      <ion-tab-button [routerLink]="['/grafica']">
-        <ion-icon name="pie-chart-outline"></ion-icon>
-        <ion-label>Grafica</ion-label>
-      </ion-tab-button>
-  
-    </ion-tab-bar>
-  </ion-tabs>
-</ion-tab-bar>
-</ion-footer>
+<app-tabs mode="admin"></app-tabs>

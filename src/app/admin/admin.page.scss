@@ -1,0 +1,87 @@
+.admin-screen {
+  --background: radial-gradient(circle at 10% 0%, rgba(22, 119, 255, 0.22), transparent 28%), #070b14;
+  color: #eef6ff;
+}
+
+.admin-hero {
+  width: min(980px, calc(100% - 2rem));
+  margin: 1.5rem auto 1rem;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  border: 1px solid rgba(99, 230, 255, 0.2);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(10, 15, 28, 0.92), rgba(17, 10, 36, 0.86));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.34);
+}
+
+.admin-hero p {
+  margin: 0 0 0.55rem;
+  color: #63e6ff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.admin-hero h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.admin-hero span {
+  display: block;
+  max-width: 42rem;
+  margin-top: 0.8rem;
+  color: #b8c7e6;
+  line-height: 1.6;
+}
+
+.user-list {
+  width: min(980px, calc(100% - 2rem));
+  margin: 0 auto 2rem;
+  padding: 0;
+  background: transparent;
+}
+
+.user-row {
+  --background: rgba(255, 255, 255, 0.055);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --color: #eef6ff;
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+}
+
+.user-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.user-title h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+ion-label p {
+  color: #b8c7e6;
+}
+
+.empty-state {
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px dashed rgba(99, 230, 255, 0.24);
+  border-radius: 22px;
+  color: #b8c7e6;
+  text-align: center;
+}
+
+.empty-state h2 {
+  margin: 0 0 0.5rem;
+  color: #ffffff;
+}

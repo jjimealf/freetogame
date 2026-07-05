@@ -1,0 +1,137 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userPath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+
+    function userProfile(uid) {
+      return get(userPath(uid)).data;
+    }
+
+    function profileExists(uid) {
+      return exists(userPath(uid));
+    }
+
+    function isActiveUser(uid) {
+      return signedIn()
+        && profileExists(uid)
+        && userProfile(uid).active == true
+        && userProfile(uid).deleted == false;
+    }
+
+    function isActiveAdmin() {
+      return isActiveUser(request.auth.uid)
+        && userProfile(request.auth.uid).role == 'admin';
+    }
+
+    function hasValidUserProfileShape(data) {
+      return data.keys().hasAll([
+          'uid',
+          'email',
+          'firstName',
+          'secondName',
+          'displayName',
+          'role',
+          'active',
+          'deleted',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid',
+          'email',
+          'firstName',
+          'secondName',
+          'displayName',
+          'role',
+          'active',
+          'deleted',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.uid is string
+        && data.email is string
+        && data.firstName is string
+        && data.secondName is string
+        && data.displayName is string
+        && data.role in ['user', 'admin']
+        && data.active is bool
+        && data.deleted is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidSelfCreate(uid) {
+      return signedIn()
+        && request.auth.uid == uid
+        && hasValidUserProfileShape(request.resource.data)
+        && request.resource.data.uid == uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.role == 'user'
+        && request.resource.data.active == false
+        && request.resource.data.deleted == false
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    function isValidSelfUpdate(uid) {
+      return signedIn()
+        && request.auth.uid == uid
+        && isActiveUser(uid)
+        && hasValidUserProfileShape(request.resource.data)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'uid',
+          'email',
+          'role',
+          'active',
+          'deleted',
+          'createdAt'
+        ])
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    function isReadableByAdmin() {
+      return isActiveAdmin()
+        && resource.data.role == 'user'
+        && resource.data.deleted == false;
+    }
+
+    function isValidAdminUpdate() {
+      return isActiveAdmin()
+        && resource.data.role == 'user'
+        && request.resource.data.role == 'user'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'active',
+          'deleted',
+          'updatedAt'
+        ])
+        && request.resource.data.active is bool
+        && request.resource.data.deleted is bool
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    match /users/{uid} {
+      allow create: if isValidSelfCreate(uid);
+      allow get: if signedIn() && (request.auth.uid == uid || isReadableByAdmin());
+      allow list: if isReadableByAdmin();
+      allow update: if isValidSelfUpdate(uid) || isValidAdminUpdate();
+      allow delete: if false;
+
+      match /favorites/{gameId} {
+        allow read, write: if signedIn()
+          && request.auth.uid == uid
+          && isActiveUser(uid);
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

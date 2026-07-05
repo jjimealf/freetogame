@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { juego } from '../interfaces/interface';
-import { RestService } from '../service/rest.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonInfiniteScroll } from '@ionic/angular';
-import { StorageService } from '../service/storage.service';
+import { Subscription } from 'rxjs';
+import { FavoritesService } from '../core/favorites/favorites.service';
+import { GamesService } from '../core/games/games.service';
+import { Game } from '../core/models/game.model';
 
 @Component({
     selector: 'app-juegos',
@@ -10,85 +11,104 @@ import { StorageService } from '../service/storage.service';
     styleUrls: ['./juegos.page.scss'],
     standalone: false
 })
-export class UserPage implements OnInit {
+export class UserPage implements OnInit, OnDestroy {
+  juegos: Game[] = [];
+  loading = false;
+  errorMessage = '';
 
-  juegos: juego[] = [];
-  isFull: boolean[] = [];
-  isFav: boolean[] = [];
-  pagesI: number = 0;
-  pagesF: number = 20;
-  
+  private readonly pageSize = 20;
+  private allGames: Game[] = [];
+  private nextIndex = 0;
+  private expandedIds = new Set<number>();
+  private favoriteIds = new Set<number>();
+  private favoritesSubscription?: Subscription;
 
   @ViewChild(IonInfiniteScroll, {static: true}) infiniteScroll: IonInfiniteScroll;
-  
 
-  constructor(public restService: RestService, public storageService: StorageService) { 
-     
-   }
+  constructor(
+    private readonly gamesService: GamesService,
+    private readonly favoritesService: FavoritesService
+  ) {}
 
   ngOnInit() {
-    
+    this.favoritesSubscription = this.favoritesService.favorites$().subscribe((favorites) => {
+      this.favoriteIds = new Set(favorites.map((favorite) => favorite.id));
+    });
   }
-  
+
+  ngOnDestroy() {
+    this.favoritesSubscription?.unsubscribe();
+  }
+
   ionViewWillEnter(){
-    this.listadoJuegos();
+    if (this.allGames.length === 0 && !this.loading) {
+      void this.listadoJuegos();
+    }
   }
 
-  listadoJuegos(){
-    this.restService.listarJuegos().then( (data: juego[]) => {
-      for(let i = this.pagesI; i < this.pagesF; i++){
-        this.juegos.push(data[i]);
-      }
-      this.getData(data);
+  async listadoJuegos(): Promise<void> {
+    this.loading = true;
+    this.errorMessage = '';
 
-      this.pagesI += 20;
-      if(this.pagesF < 360){
-        this.pagesF += 20;
-      }else{
-        this.pagesF +=10
-      }
-    })
-    
+    try {
+      this.allGames = await this.gamesService.listGames();
+      this.juegos = [];
+      this.nextIndex = 0;
+      this.expandedIds.clear();
+      this.appendNextPage();
+    } catch (error) {
+      this.errorMessage = 'No se pudo cargar el catalogo de juegos.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   loadData(event){
     setTimeout(() => {
-      this.listadoJuegos();
+      this.appendNextPage();
       event.target.complete();
-      if (this.juegos.length === 369) {
-        event.target.disabled = true;
-      }
-    }, 500);
+      event.target.disabled = !this.hasMoreGames();
+    }, 250);
   }
 
   toggleInfiniteScroll() {
     this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
   }
 
-  getData(data: juego[]){
-    this.isFav = [];
-    for(let i=0; i<data.length; i++){
-      this.isFull.push(false);
-      const existe = this.storageService.juegos.find(juego => juego.id === data[i].id)
-      if(!existe){
-        this.isFav.push(false);
-      }else {
-        this.isFav.push(true);
-      }
+  isExpanded(gameId: number): boolean {
+    return this.expandedIds.has(gameId);
+  }
+
+  toggleMore(gameId: number): void {
+    if (this.expandedIds.has(gameId)) {
+      this.expandedIds.delete(gameId);
+    } else {
+      this.expandedIds.add(gameId);
     }
   }
 
-
-  toggleMore(i){
-    this.isFull[i] = !this.isFull[i];
+  isFavorite(gameId: number): boolean {
+    return this.favoriteIds.has(gameId);
   }
 
-  fav(i){
-    this.isFav[i] = !this.isFav[i];
-    if(this.isFav[i] == true){
-      this.storageService.guardarFav(this.juegos[i])
-    }else{
-      this.storageService.borrarFav(this.juegos[i])
+  async fav(game: Game): Promise<void> {
+    if (this.favoriteIds.has(game.id)) {
+      this.favoriteIds.delete(game.id);
+      await this.favoritesService.remove(game.id);
+      return;
     }
+
+    this.favoriteIds.add(game.id);
+    await this.favoritesService.add(game);
+  }
+
+  private appendNextPage(): void {
+    const nextGames = this.allGames.slice(this.nextIndex, this.nextIndex + this.pageSize);
+    this.juegos.push(...nextGames);
+    this.nextIndex += nextGames.length;
+  }
+
+  private hasMoreGames(): boolean {
+    return this.nextIndex < this.allGames.length;
   }
 }

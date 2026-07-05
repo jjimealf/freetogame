@@ -1,16 +1,6 @@
-export interface juego{
-    id: number; 
-    title: string;
-    thumbnail: string;
-    short_description: string;
-    game_url: string;
-    genre: string;
-    platform: string;
-    publisher: string;
-    developer: string;
-    release_date: Date;
-    freetogame_profile_url: string;
-}
+import { Game } from '../core/models/game.model';
+
+export type juego = Game;
 
 export interface juegos{
     juegos: juego[]

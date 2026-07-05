@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
+import { FavoritesService } from '../core/favorites/favorites.service';
+import { FavoriteGame } from '../core/models/favorite-game.model';
+import { Game } from '../core/models/game.model';
 import { juego } from '../interfaces/interface';
-import { StorageService } from '../service/storage.service';
 import { CarritoPage } from '../carrito/carrito.page';
 
 @Component({
@@ -10,58 +13,53 @@ import { CarritoPage } from '../carrito/carrito.page';
     styleUrls: ['./favoritos.page.scss'],
     standalone: false
 })
-export class FavoritosPage implements OnInit {
-
+export class FavoritosPage implements OnInit, OnDestroy {
+  favoritos: FavoriteGame[] = [];
   carrito: juego[] = [];
-  isFull: boolean[] = [];
-  isFav: boolean[] = [];
-  sliderOpts = {
-    allowSlidePrev: false,
-    alloSlideNext: false
-};
 
-  constructor(public storageService: StorageService, private modalCtrl: ModalController) { 
-    
-  }
+  private favoritesSubscription?: Subscription;
+  private expandedIds = new Set<number>();
+
+  constructor(
+    private readonly favoritesService: FavoritesService,
+    private modalCtrl: ModalController
+  ) {}
 
   ngOnInit() {
-    
-  }
-
-  ionViewWillEnter(){
-    this.listarFavoritos();
-  }
-
-  listarFavoritos() {
-    this.isFav = []
-    this.isFull = []
-    this.storageService.juegos.forEach(() => {
-      this.isFull.push(false);
-      this.isFav.push(true);
+    this.favoritesSubscription = this.favoritesService.favorites$().subscribe((favorites) => {
+      this.favoritos = favorites;
+      this.carrito = this.carrito.filter((cartItem) => favorites.some((favorite) => favorite.id === cartItem.id));
     });
   }
 
-
-  toggleMore(i){
-    this.isFull[i] = !this.isFull[i];
+  ngOnDestroy() {
+    this.favoritesSubscription?.unsubscribe();
   }
 
-  fav(i){
-    this.isFav[i] = !this.isFav[i];
-    if(this.isFav[i] == false){
-      this.storageService.borrarFav(this.storageService.juegos[i]);
-      this.isFull.splice(i, 1);
-      this.isFav.splice(i, 1);
+  isExpanded(gameId: number): boolean {
+    return this.expandedIds.has(gameId);
+  }
+
+  toggleMore(gameId: number): void {
+    if (this.expandedIds.has(gameId)) {
+      this.expandedIds.delete(gameId);
+    } else {
+      this.expandedIds.add(gameId);
     }
   }
 
-  add(i){ 
-    var id = this.carrito.find(juego => juego.id == this.storageService.juegos[i].id)
-    if(id == null){
-      this.carrito.push(this.storageService.juegos[i]);  
+  async fav(game: Game): Promise<void> {
+    await this.favoritesService.remove(game.id);
+    this.carrito = this.carrito.filter((item) => item.id !== game.id);
+  }
+
+  add(game: Game): void {
+    const exists = this.carrito.find(item => item.id === game.id)
+    if(exists == null){
+      this.carrito.push(game);
     }
   }
-  
+
   async pedido(){
     const modal = await this.modalCtrl.create({
       component: CarritoPage,
@@ -71,8 +69,6 @@ export class FavoritosPage implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    this.carrito = data.carrito;
+    this.carrito = data?.carrito ?? this.carrito;
   }
 }
-
-

@@ -1,45 +1,73 @@
-<ion-header>
-  <ion-toolbar color = "primary">
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>REGISTRO</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content fullscreen class="auth-screen">
+  <section class="auth-shell register-shell">
+    <div class="auth-hero" aria-hidden="true">
+      <span class="hero-kicker">New player queue</span>
+      <h1>Solicita acceso</h1>
+      <p>Recibiras un correo de verificacion y despues un administrador activara tu cuenta.</p>
+    </div>
 
-<ion-content color="dark">
-  <ion-card color="dark">
-    <ion-card-content>
-      <form [formGroup] = "formularioRegistro">
-        <ion-item lines="full" color="dark">
-          <ion-label position="floating">Nombre</ion-label>
-          <ion-input formControlName = "nombre" type="text" required></ion-input>
-        </ion-item>
-      
-        <ion-item lines="full" color="dark">
-          <ion-label position="floating">Apellidos</ion-label>
-          <ion-input formControlName = "apellidos" type="text" required></ion-input>
-        </ion-item>
-    
-        <ion-item lines="full" color="dark">
-          <ion-label position="floating">Email</ion-label>
-          <ion-input formControlName = "email" type="text" required></ion-input>
-        </ion-item>
-    
-        <ion-item lines="full" color="dark">
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input formControlName = "password" type="password" required></ion-input>
-        </ion-item>
+    <ion-card class="auth-card">
+      <ion-card-header>
+        <ion-card-subtitle>Registro seguro</ion-card-subtitle>
+        <ion-card-title>Crear cuenta</ion-card-title>
+      </ion-card-header>
 
-        <ion-item lines="full" color="dark">
-          <ion-label position="floating">Confirmar contraseña</ion-label>
-          <ion-input formControlName = "confirmpassword" type="password" required></ion-input>
-        </ion-item>
-    
-        <ion-col>
-          <ion-button (click)="register()" color="primary" expand="block">REGISTRAR</ion-button>
-        </ion-col>
-      </form>
-    </ion-card-content>
-  </ion-card>
+      <ion-card-content>
+        <form [formGroup]="formularioRegistro" (ngSubmit)="register()" novalidate>
+          <div class="field-grid">
+            <div>
+              <ion-item lines="none" class="auth-field">
+                <ion-input label="Nombre" labelPlacement="floating" formControlName="firstName" autocomplete="given-name"></ion-input>
+              </ion-item>
+              @if (firstName.touched && firstName.invalid) {
+                <ion-note color="danger">Introduce tu nombre.</ion-note>
+              }
+            </div>
+
+            <div>
+              <ion-item lines="none" class="auth-field">
+                <ion-input label="Apellidos" labelPlacement="floating" formControlName="secondName" autocomplete="family-name"></ion-input>
+              </ion-item>
+              @if (secondName.touched && secondName.invalid) {
+                <ion-note color="danger">Introduce tus apellidos.</ion-note>
+              }
+            </div>
+          </div>
+
+          <ion-item lines="none" class="auth-field">
+            <ion-input label="Email" labelPlacement="floating" formControlName="email" type="email" autocomplete="email"></ion-input>
+          </ion-item>
+          @if (email.touched && email.invalid) {
+            <ion-note color="danger">Introduce un correo valido.</ion-note>
+          }
+
+          <ion-item lines="none" class="auth-field">
+            <ion-input label="Contrasena" labelPlacement="floating" formControlName="password" type="password" autocomplete="new-password"></ion-input>
+          </ion-item>
+          @if (password.touched && password.invalid) {
+            <ion-note color="danger">Usa al menos 6 caracteres.</ion-note>
+          }
+
+          <ion-item lines="none" class="auth-field">
+            <ion-input label="Confirmar contrasena" labelPlacement="floating" formControlName="confirmPassword" type="password" autocomplete="new-password"></ion-input>
+          </ion-item>
+          @if (confirmPassword.touched && confirmPassword.hasError('required')) {
+            <ion-note color="danger">Confirma tu contrasena.</ion-note>
+          }
+          @if (passwordMismatch) {
+            <ion-note color="danger">Las contrasenas no coinciden.</ion-note>
+          }
+
+          <ion-button type="submit" expand="block" class="auth-submit">
+            Crear cuenta
+          </ion-button>
+        </form>
+
+        <p class="auth-link">
+          Ya tienes cuenta
+          <a [routerLink]="['/login']">Inicia sesion</a>
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </section>
 </ion-content>

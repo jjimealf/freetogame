@@ -1,0 +1,10 @@
+<ion-footer>
+  <ion-tab-bar slot="bottom" color="primary" class="app-tabs">
+    @for (tab of tabs; track tab.path) {
+      <ion-tab-button [routerLink]="[tab.path]">
+        <ion-icon [name]="tab.icon"></ion-icon>
+        <ion-label>{{ tab.label }}</ion-label>
+      </ion-tab-button>
+    }
+  </ion-tab-bar>
+</ion-footer>

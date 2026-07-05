@@ -1,11 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
-import { RestService } from '../service/rest.service';
-import {  UntypedFormGroup, 
-          UntypedFormControl, 
-          Validators, 
-          UntypedFormBuilder } from '@angular/forms';
-          import { Router } from '@angular/router';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthFailure, AuthService } from '../core/auth/auth.service';
+import { FeedbackService } from '../core/ui/feedback.service';
+
+type RegisterForm = FormGroup<{
+  firstName: FormControl<string>;
+  secondName: FormControl<string>;
+  email: FormControl<string>;
+  password: FormControl<string>;
+  confirmPassword: FormControl<string>;
+}>;
 
 @Component({
     selector: 'app-registro',
@@ -14,49 +26,84 @@ import {  UntypedFormGroup,
     standalone: false
 })
 export class RegistroPage implements OnInit {
+  formularioRegistro: RegisterForm;
 
-  formularioRegistro: UntypedFormGroup;
-
-  constructor(private route: Router, public fb: UntypedFormBuilder, public alertControler: AlertController, public restService : RestService) {
-
-    this.formularioRegistro = this.fb.group({
-      'nombre': new UntypedFormControl("", Validators.required),
-      'apellidos': new UntypedFormControl("", Validators.required),
-      'email': new UntypedFormControl("", Validators.required),
-      'password': new UntypedFormControl("", Validators.required),
-      'confirmpassword': new UntypedFormControl("", Validators.required)
-    })
-
+  constructor(
+    private readonly router: Router,
+    private readonly formBuilder: NonNullableFormBuilder,
+    private readonly authService: AuthService,
+    private readonly feedback: FeedbackService
+  ) {
+    this.formularioRegistro = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      secondName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    }, { validators: [this.passwordsMatchValidator] });
   }
 
   ngOnInit() {
   }
 
-  async register(){
-    var f = this.formularioRegistro.value;
+  get firstName(): FormControl<string> {
+    return this.formularioRegistro.controls.firstName;
+  }
 
-    if(this.formularioRegistro.invalid){
-      const alert = await this.alertControler.create({
-        header: 'Datos incompletos',
-        message: 'Tienes que llenar todos los campos.',
-        buttons: ['Aceptar'],
-      });
-      await alert.present();
+  get secondName(): FormControl<string> {
+    return this.formularioRegistro.controls.secondName;
+  }
+
+  get email(): FormControl<string> {
+    return this.formularioRegistro.controls.email;
+  }
+
+  get password(): FormControl<string> {
+    return this.formularioRegistro.controls.password;
+  }
+
+  get confirmPassword(): FormControl<string> {
+    return this.formularioRegistro.controls.confirmPassword;
+  }
+
+  get passwordMismatch(): boolean {
+    return this.formularioRegistro.hasError('passwordMismatch') && this.confirmPassword.touched;
+  }
+
+  async register(): Promise<void> {
+    if (this.formularioRegistro.invalid) {
+      this.formularioRegistro.markAllAsTouched();
+      await this.feedback.showAlert('Datos incompletos', 'Revisa los campos marcados antes de continuar.');
       return;
     }
 
-    var usuario = {
-      nombre: f.nombre,
-      apellidos: f.apellidos,
-      email: f.email,
-      password: f.password,
-      confirmpassword: f.confirmpassword
+    const value = this.formularioRegistro.getRawValue();
+
+    try {
+      await this.feedback.withLoading('Creando cuenta...', () => this.authService.register({
+        firstName: value.firstName,
+        secondName: value.secondName,
+        email: value.email,
+        password: value.password
+      }));
+      await this.feedback.showAlert(
+        'Usuario registrado',
+        'Confirma tu correo y espera a que el administrador active tu cuenta.'
+      );
+      await this.router.navigate(['/login']);
+    } catch (error) {
+      await this.feedback.showAlert('No se pudo registrar', this.getErrorMessage(error));
     }
+  }
 
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+  private passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
 
-    console.log(usuario);
-    this.restService.registrarUsuario
-    (usuario.nombre, usuario.apellidos, usuario.email, usuario.password, usuario.confirmpassword);
-    this.route.navigate(['/home'])
-}}
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  private getErrorMessage(error: unknown): string {
+    return error instanceof AuthFailure ? error.message : 'No se pudo completar el registro.';
+  }
+}

@@ -8,9 +8,25 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { PipesModule } from './pipes/pipes.module';
-import { IonicStorageModule } from '@ionic/storage-angular';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
+import { environment } from '../environments/environment';
 
-@NgModule({ declarations: [AppComponent, CarritoPage],
-    bootstrap: [AppComponent], imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, PipesModule], providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient(withInterceptorsFromDi()), provideCharts(withDefaultRegisterables())] })
+@NgModule({
+  declarations: [AppComponent, CarritoPage],
+  bootstrap: [AppComponent],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, PipesModule],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideCharts(withDefaultRegisterables()),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions())
+  ]
+})
 export class AppModule {}

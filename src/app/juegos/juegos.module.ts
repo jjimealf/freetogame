@@ -8,6 +8,7 @@ import { UserPageRoutingModule } from './juegos-routing.module';
 
 import { UserPage } from './juegos.page';
 import { PipesModule } from '../pipes/pipes.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { PipesModule } from '../pipes/pipes.module';
     FormsModule,
     IonicModule,
     UserPageRoutingModule,
-    PipesModule
+    PipesModule,
+    SharedModule
   ],
   declarations: [UserPage]
 })
