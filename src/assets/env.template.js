@@ -3,5 +3,5 @@
  * Do not commit env.js; it is ignored because it contains environment values.
  */
 globalThis.__FREETOGAME_FIREBASE_CONFIG__ = {
-  apiKey: 'AIzaSyCc4QRiV-i40yNjBpRDne9sg02cpdpeLK0'
+  apiKey: 'REPLACE_WITH_FIREBASE_WEB_API_KEY'
 };
