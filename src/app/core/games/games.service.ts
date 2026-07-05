@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { Game, GamePlatformFilter, GamesQuery } from '../models/game.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GamesService {
-  constructor(private readonly functions: Functions) {}
+  private readonly apiUrl = 'https://www.freetogame.com/api/games';
+
+  constructor(private readonly http: HttpClient) {}
 
   listGames(): Promise<Game[]> {
     return this.callGetGames({});
@@ -21,9 +24,16 @@ export class GamesService {
   }
 
   private async callGetGames(query: GamesQuery): Promise<Game[]> {
-    const callable = httpsCallable<GamesQuery, Game[]>(this.functions, 'getGames');
-    const result = await callable(query);
+    let params = new HttpParams();
 
-    return result.data;
+    if (query.platform !== undefined && query.platform !== 'all') {
+      params = params.set('platform', query.platform);
+    }
+
+    if (query.category !== undefined) {
+      params = params.set('category', query.category.trim().toLowerCase());
+    }
+
+    return firstValueFrom(this.http.get<Game[]>(this.apiUrl, { params }));
   }
 }
