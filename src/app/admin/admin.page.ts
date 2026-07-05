@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AlertController, IonList } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { UserProfile } from '../core/models/user-profile.model';
@@ -9,9 +9,9 @@ import { UsersService } from '../core/users/users.service';
     selector: 'app-admin',
     templateUrl: './admin.page.html',
     styleUrls: ['./admin.page.scss'],
-    standalone: false
+    
 })
-export class AdminPage implements OnInit {
+export class AdminPage  {
   usuarios$: Observable<UserProfile[]> = this.usersService.listUsers();
 
   @ViewChild('lista') lista?: IonList;
@@ -22,8 +22,7 @@ export class AdminPage implements OnInit {
     private readonly feedback: FeedbackService
   ) {}
 
-  ngOnInit() {
-  }
+  
 
   statusLabel(usuario: UserProfile): string {
     if (usuario.active) {

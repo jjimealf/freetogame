@@ -31,7 +31,7 @@ function parseRequestData(data: GetGamesData): GetGamesData {
 
   const category = data.category?.trim().toLowerCase();
 
-  if (category !== undefined && category.length === 0) {
+  if (category?.length === 0) {
     throw new HttpsError('invalid-argument', 'La categoria solicitada no es valida.');
   }
 
