@@ -14,6 +14,7 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideFunctions, getFunctions } from '@angular/fire/functions';
 import { environment } from '../environments/environment';
+import { requireFirebaseConfig } from '../environments/firebase-config';
 
 @NgModule({
   declarations: [AppComponent, CarritoPage],
@@ -23,7 +24,7 @@ import { environment } from '../environments/environment';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideHttpClient(withInterceptorsFromDi()),
     provideCharts(withDefaultRegisterables()),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirebaseApp(() => initializeApp(requireFirebaseConfig(environment.firebase))),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideFunctions(() => getFunctions())

@@ -30,19 +30,19 @@
 
           <ion-item-options side="start">
             @if (!usuario.active) {
-              <ion-item-option color="success" (click)="activar(usuario.uid)">
+              <ion-item-option color="success" (click)="activar(usuario.uid)" (keydown.enter)="activar(usuario.uid)">
                 <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
               </ion-item-option>
             }
             @if (usuario.active) {
-              <ion-item-option color="warning" (click)="desactivar(usuario.uid)">
+              <ion-item-option color="warning" (click)="desactivar(usuario.uid)" (keydown.enter)="desactivar(usuario.uid)">
                 <ion-icon slot="icon-only" name="pause-outline"></ion-icon>
               </ion-item-option>
             }
           </ion-item-options>
 
           <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="eliminar(usuario)">
+            <ion-item-option color="danger" (click)="eliminar(usuario)" (keydown.enter)="eliminar(usuario)">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-item-option>
           </ion-item-options>
