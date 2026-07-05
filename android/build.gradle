@@ -1,5 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+// Enable Gradle to automatically download a matching Java toolchain when not present.
+// This helps resolve: "Cannot find a Java installation... Toolchain download repositories have not been configured." on CI/Windows.
+gradle.startParameter.systemPropertiesArgs.put('org.gradle.java.installations.auto-download', 'true')
+
 buildscript {
     
     repositories {
