@@ -31,6 +31,36 @@ export class AuthFailure extends Error {
   }
 }
 
+export function getFirebaseErrorMessage(error: unknown): string {
+  const code = typeof error === 'object' && error !== null && 'code' in error ? String(error.code) : '';
+
+  switch (code) {
+    case 'auth/configuration-not-found':
+      return 'Firebase Authentication no esta configurado para este proyecto. Activa Authentication en Firebase y habilita el proveedor Email/Password.';
+    case 'auth/operation-not-allowed':
+      return 'El registro con Email/Password no esta habilitado en Firebase Authentication.';
+    case 'auth/api-key-not-valid':
+    case 'auth/invalid-api-key':
+      return 'La clave web de Firebase no es valida. Actualiza src/assets/env.js con una clave rotada del proyecto correcto.';
+    case 'permission-denied':
+      return 'Firebase rechazo la escritura del perfil. Revisa las reglas de Firestore desplegadas.';
+    case 'auth/invalid-credential':
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+      return 'Credenciales incorrectas.';
+    case 'auth/email-already-in-use':
+      return 'El correo ya esta registrado.';
+    case 'auth/weak-password':
+      return 'La contrasena debe tener al menos 6 caracteres.';
+    case 'auth/invalid-email':
+      return 'El correo no tiene un formato valido.';
+    case 'auth/network-request-failed':
+      return 'No se pudo conectar con Firebase. Revisa la conexion e intentalo de nuevo.';
+    default:
+      return 'No se pudo completar la operacion.';
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -121,7 +151,7 @@ export class AuthService {
         throw error;
       }
 
-      throw new AuthFailure('registration-failed', this.getFirebaseErrorMessage(error));
+      throw new AuthFailure('registration-failed', getFirebaseErrorMessage(error));
     }
   }
 
@@ -156,26 +186,7 @@ export class AuthService {
   }
 
   private mapFirebaseAuthError(error: unknown): AuthFailure {
-    const message = this.getFirebaseErrorMessage(error);
+    const message = getFirebaseErrorMessage(error);
     return new AuthFailure(message === 'Credenciales incorrectas.' ? 'invalid-credentials' : 'unknown', message);
-  }
-
-  private getFirebaseErrorMessage(error: unknown): string {
-    const code = typeof error === 'object' && error !== null && 'code' in error ? String(error.code) : '';
-
-    switch (code) {
-      case 'auth/invalid-credential':
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-        return 'Credenciales incorrectas.';
-      case 'auth/email-already-in-use':
-        return 'El correo ya esta registrado.';
-      case 'auth/weak-password':
-        return 'La contrasena debe tener al menos 6 caracteres.';
-      case 'auth/invalid-email':
-        return 'El correo no tiene un formato valido.';
-      default:
-        return 'No se pudo completar la operacion.';
-    }
   }
 }
